@@ -20,6 +20,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>eureka</module>
+		<module>config</module>
 		<module>base</module>
 		<module>account</module>
 	</modules>
