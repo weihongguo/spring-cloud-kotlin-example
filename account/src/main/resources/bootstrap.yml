@@ -1,0 +1,7 @@
+server:
+  servlet:
+    context-path: /api/account
+
+spring:
+  application:
+    name: ACCOUNT
