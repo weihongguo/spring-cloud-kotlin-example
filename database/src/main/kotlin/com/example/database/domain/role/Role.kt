@@ -1,17 +1,21 @@
 package com.example.database.domain.role
 
 import com.example.database.domain.BaseEntity
+import javax.persistence.Entity
 
+@Entity
 data class Role (
     var type: String = "",
     var name: String = ""
 ) : BaseEntity()
 
+@Entity
 data class RolePermission (
     var roleId: Long = 0,
     var permissionId: Long = 0
 ) : BaseEntity()
 
+@Entity
 data class Permission(
     var module: String = "",
     var name: String = "",

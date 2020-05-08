@@ -10,7 +10,6 @@ import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-
 const val KEY_AUTHORIZATION = "Authorization"
 const val BEARER_PRE = "Bearer "
 

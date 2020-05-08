@@ -6,7 +6,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.Date
 
 private const val JWT_USER_SEPARATOR = "#"
 private const val JWT_USER_VALUES_LEN = 2
@@ -38,18 +38,18 @@ fun String.toJwtUser() : JwtUser? {
 
 @Component
 @ConfigurationProperties(prefix = "jwt.config")
-data class JwtConfig(
-    var generateKey: String,
-    var duration: Long,
-    var parseKeys: String
-)
+object JwtConfig {
+    lateinit var generateKey: String
+    lateinit var duration: String
+    lateinit var parseKeys: String
+}
 
 fun generateJwt(jwtConfig: JwtConfig, jwtUser: JwtUser): String {
     var now = Date()
     val builder = Jwts.builder()
     builder.setSubject(jwtUser.toString())
         .setIssuedAt(now)
-        .setExpiration(Date(now.time + jwtConfig.duration))
+        .setExpiration(Date(now.time + jwtConfig.duration.toLong()))
         .signWith(SignatureAlgorithm.HS512, jwtConfig.generateKey)
     return builder.compact()
 }
