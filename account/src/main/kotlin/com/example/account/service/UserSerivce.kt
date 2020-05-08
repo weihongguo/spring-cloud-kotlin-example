@@ -1,15 +1,19 @@
 package com.example.account.service
 
 import com.example.account.repository.UserRepository
+import com.example.account.security.JwtUser
 import com.example.database.domain.user.User
-import com.example.database.repository.base.BaseRepository
-import com.example.database.service.base.BaseService
-import com.example.database.service.base.BaseServiceImpl
+import com.example.database.repository.BaseRepository
+import com.example.database.service.BaseService
+import com.example.database.service.BaseServiceImpl
+import com.example.security.AuthorizationUserType
+import org.apache.tomcat.util.http.parser.Authorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 interface UserService : BaseService<User> {
     fun getByMobile(mobile: String): User?
+    fun getByJwtUser(jwtUser: JwtUser): User?
 }
 
 @Service
@@ -24,5 +28,12 @@ class UserServiceImpl : BaseServiceImpl<User>(), UserService {
 
     override fun getByMobile(mobile: String): User? {
         return userRepository.findByMobile(mobile)
+    }
+
+    override fun getByJwtUser(jwtUser: JwtUser): User? {
+        if (jwtUser.type != AuthorizationUserType.USER.value) {
+            return null
+        }
+        return userRepository.findById(jwtUser.id).orElse(null)
     }
 }

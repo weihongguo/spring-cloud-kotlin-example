@@ -1,8 +1,8 @@
-package com.example.database.service.base
+package com.example.database.service
 
-import com.example.database.domain.base.BaseEntity
-import com.example.database.repository.base.BaseReadRepository
-import com.example.database.repository.base.BaseRepository
+import com.example.database.domain.BaseEntity
+import com.example.database.repository.BaseReadRepository
+import com.example.database.repository.BaseRepository
 
 interface BaseReadService<T : BaseEntity> {
     fun getRepository(): BaseReadRepository<T>
@@ -25,7 +25,7 @@ abstract class BaseReadServiceImpl<T : BaseEntity> : BaseReadService<T> {
     }
 
     override fun listByIdIn(ids: Collection<Long>): List<T>? {
-        if (ids == null || ids.isEmpty()) {
+        if (ids.isEmpty()) {
             return null
         }
         return getRepository().findByIdIn(ids)

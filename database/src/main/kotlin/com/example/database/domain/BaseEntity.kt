@@ -1,4 +1,4 @@
-package com.example.database.domain.base
+package com.example.database.domain
 
 import java.util.*
 import javax.persistence.GeneratedValue
@@ -10,10 +10,8 @@ import javax.persistence.MappedSuperclass
 abstract class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long?,
-    var createTime: Date?,
-    var updateTime: Date?,
-    var deleteTime: Date?
-) {
-    constructor(): this(null, null, null, null)
-}
+    var id: Long = 0L,
+    var createTime: Date? = null,
+    var updateTime: Date? = null,
+    var deleteTime: Date? = null
+)

@@ -1,6 +1,6 @@
-package com.example.database.repository.base
+package com.example.database.repository
 
-import com.example.database.domain.base.BaseEntity
+import com.example.database.domain.BaseEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.NoRepositoryBean
