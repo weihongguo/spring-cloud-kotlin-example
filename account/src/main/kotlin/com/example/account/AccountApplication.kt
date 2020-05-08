@@ -7,7 +7,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EntityScan(basePackages = ["com.example.database.domain"])
+@EntityScan(basePackages = ["com.example.database.entity"])
 class AccountApplication
 
 fun main(args: Array<String>) {

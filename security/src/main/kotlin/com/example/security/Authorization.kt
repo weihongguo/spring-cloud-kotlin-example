@@ -1,7 +1,7 @@
 package com.example.security
 
-import com.example.database.domain.role.Permission
-import com.example.database.domain.role.PermissionMethod
+import com.example.database.entity.Permission
+import com.example.database.entity.PermissionMethod
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.util.AntPathMatcher
@@ -23,7 +23,7 @@ enum class AuthorizationUserType(
 private val logger = LoggerFactory.getLogger(PermissionAuthority::class.java)
 data class PermissionAuthority(var permission: Permission) : GrantedAuthority {
 
-    override fun getAuthority(): String {
+    override fun getAuthority(): String? {
         return this.permission.name
     }
 

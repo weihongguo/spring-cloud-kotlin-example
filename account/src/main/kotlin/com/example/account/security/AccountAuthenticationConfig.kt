@@ -2,7 +2,7 @@ package com.example.account.security
 
 import com.example.account.service.PermissionService
 import com.example.account.service.UserService
-import com.example.database.domain.role.Permission
+import com.example.database.entity.Permission
 import com.example.security.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -15,7 +15,7 @@ import java.util.*
 class AccountAuthenticationConfig : BaseAuthenticationConfig() {
 
     @Autowired
-    lateinit var accountAuthorizationService: AuthorizationService
+    lateinit var accountAuthorizationService: AccountAuthorizationService
 
     override fun permitMatchers(): Array<String> {
         return arrayOf("/init", "/login", "/register", "/test/**")
@@ -26,8 +26,12 @@ class AccountAuthenticationConfig : BaseAuthenticationConfig() {
     }
 }
 
+interface AccountAuthorizationService : AuthorizationService {
+    fun getByJwt(jwt: String, module: String): Authorization?
+}
+
 @Service
-class AccountAuthorizationServiceImpl : AuthorizationService {
+class AccountAuthorizationServiceImpl : AccountAuthorizationService {
 
     @Autowired
     lateinit var userService: UserService
@@ -40,11 +44,10 @@ class AccountAuthorizationServiceImpl : AuthorizationService {
         return getByJwt(jwt, "account")
     }
 
-    fun getByJwt(jwt: String, module: String): Authorization? {
+    override fun getByJwt(jwt: String, module: String): Authorization? {
         var jwtUser = parseJwt(jwtConfig, jwt) ?: return null
         var user = userService.getByJwtUser(jwtUser) ?: return null
         var authorizationUser = AuthorizationUser(AuthorizationUserType.USER.value, user.id)
-
         val permissionAuthorities: MutableList<PermissionAuthority> = ArrayList()
         val permissions: List<Permission> = permissionService.listByUserIdAndModule(user.id, module)
         if (permissions.isNotEmpty()) {
@@ -53,7 +56,6 @@ class AccountAuthorizationServiceImpl : AuthorizationService {
                 permissionAuthorities.add(authority)
             }
         }
-
         return Authorization(authorizationUser, permissionAuthorities)
     }
 }

@@ -1,19 +1,23 @@
 package com.example.account.service
 
-import com.example.account.repository.UserRepository
 import com.example.account.security.JwtUser
-import com.example.database.domain.user.User
-import com.example.database.repository.BaseRepository
-import com.example.database.service.BaseService
-import com.example.database.service.BaseServiceImpl
+import com.example.database.entity.User
+import com.example.database.BaseRepository
+import com.example.database.BaseService
+import com.example.database.BaseServiceImpl
 import com.example.security.AuthorizationUserType
-import org.apache.tomcat.util.http.parser.Authorization
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 
 interface UserService : BaseService<User> {
     fun getByMobile(mobile: String): User?
     fun getByJwtUser(jwtUser: JwtUser): User?
+}
+
+@Repository
+interface UserRepository : BaseRepository<User> {
+    fun findByMobile(mobile: String): User?
 }
 
 @Service

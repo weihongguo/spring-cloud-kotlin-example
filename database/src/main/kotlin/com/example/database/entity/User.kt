@@ -1,6 +1,5 @@
-package com.example.database.domain.user
+package com.example.database.entity
 
-import com.example.database.domain.BaseEntity
 import javax.persistence.Entity
 
 @Entity

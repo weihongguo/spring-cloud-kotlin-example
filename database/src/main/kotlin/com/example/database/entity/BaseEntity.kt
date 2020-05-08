@@ -1,4 +1,4 @@
-package com.example.database.domain
+package com.example.database.entity
 
 import java.util.*
 import javax.persistence.GeneratedValue
@@ -15,3 +15,5 @@ abstract class BaseEntity(
     var updateTime: Date? = null,
     var deleteTime: Date? = null
 )
+
+class NotFoundException(message: String? = null) : RuntimeException(message)
