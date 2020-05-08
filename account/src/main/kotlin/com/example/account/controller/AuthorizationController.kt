@@ -17,8 +17,8 @@ class AuthorizationController {
     fun authorization(): Response {
         val authorizationJwt = getContextAuthorizationJwt() ?: throw RuntimeException("请先登录")
         val authorization = accountAuthorizationService.getByJwt(authorizationJwt) ?: throw RuntimeException("登录态错误")
-        var response = responseOk()
-        response.data = mapOf("authorization" to authorization)
-        return response
+        return responseOk(mapOf(
+            "authorization" to authorization
+        ))
     }
 }

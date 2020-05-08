@@ -34,8 +34,8 @@ class LoginController {
             throw RuntimeException("密码错误")
         }
         var jwtUser = JwtUser(AuthorizationUserType.USER.value, user.id)
-        var response = responseOk()
-        response.data = mapOf("token" to generateJwt(jwtConfig, jwtUser))
-        return response
+        return responseOk(mapOf(
+            "token" to generateJwt(jwtConfig, jwtUser)
+        ))
     }
 }
