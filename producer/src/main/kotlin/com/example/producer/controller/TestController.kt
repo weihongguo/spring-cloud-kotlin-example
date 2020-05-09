@@ -1,14 +1,12 @@
-package com.example.account.controller
+package com.example.producer.controller
 
-import com.example.account.utils.Single
-import com.example.account.utils.spaceToStar
 import com.example.base.Response
 import com.example.base.okResponse
 import com.example.database.entity.NotFoundException
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.security.access.AccessDeniedException
 
 @RestController
 @RequestMapping("test")
@@ -34,10 +32,6 @@ class TestController {
             "hello"
         }
         println(p)
-        println("Convert this to camelcase".spaceToStar())
-        println(Single.name)
-        Single.name = "hi"
-        println(Single.name)
 
         return okResponse()
     }
