@@ -6,6 +6,12 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
+class EntityNotFoundException(message: String? = null) : RuntimeException(message ?: "资源不存在")
+
+class EntityExistedException(message: String? = null) : RuntimeException(message ?: "资源已经存在")
+
+class EntityOperateException(message: String? = null) : RuntimeException(message ?: "资源操作错误")
+
 @MappedSuperclass
 abstract class BaseEntity(
     @Id
@@ -15,9 +21,3 @@ abstract class BaseEntity(
     var updateTime: Date? = null,
     var deleteTime: Date? = null
 )
-
-class EntityNotFoundException(message: String? = null) : RuntimeException(message ?: "资源不存在")
-
-class EntityExistedException(message: String? = null) : RuntimeException(message ?: "资源已经存在")
-
-class EntityOperateException(message: String? = null) : RuntimeException(message ?: "资源操作错误")

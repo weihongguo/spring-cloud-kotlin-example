@@ -43,6 +43,8 @@ interface BaseReadRepository<T : BaseEntity> : Repository<T, Long>, JpaSpecifica
     fun findByIdIn(ids: Collection<Long>): List<T>?
 }
 
+/* */
+
 interface BaseService<T : BaseEntity> {
     fun getRepository(): BaseRepository<T>
 
@@ -105,7 +107,7 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
         getRepository().deleteById(id)
     }
 
-    protected fun setForCreate(entity: T) {
+    open fun setForCreate(entity: T) {
         entity.id?.let {
             throw EntityOperateException("资源创建失败")
         }
@@ -115,25 +117,25 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
         entity.deleteTime = null
     }
 
-    protected fun setForUpdate(entity: T) {
+    open fun setForUpdate(entity: T) {
         entity.id?.let {
             entity.updateTime = Date()
         } ?: throw EntityOperateException("资源更新失败")
     }
 
-    protected fun setForUpdate(dbEntity: T, entity: T) {
+    private fun setForUpdate(dbEntity: T, entity: T) {
         dbEntity.id?.let {
             dbEntity.updateTime = Date()
         } ?: throw EntityOperateException("资源更新失败")
     }
 
-    protected fun setForRemove(entity: T) {
+    private fun setForRemove(entity: T) {
         entity.id?.let {
             entity.deleteTime = Date()
         } ?: throw EntityOperateException("资源不可删除")
     }
 
-    protected fun setForRestore(entity: T) {
+    private fun setForRestore(entity: T) {
         entity.id?.let {
             entity.deleteTime = null
         } ?: throw EntityOperateException("资源不可恢复")

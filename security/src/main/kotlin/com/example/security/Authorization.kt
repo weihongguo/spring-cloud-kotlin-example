@@ -20,15 +20,15 @@ enum class AuthorizationUserType(
     USER("user", "用户")
 }
 
-private val logger = LoggerFactory.getLogger(PermissionAuthority::class.java)
 data class PermissionAuthority(var permission: Permission) : GrantedAuthority {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     override fun getAuthority(): String? {
         return this.permission.name
     }
 
     fun check(antPathMatcher: AntPathMatcher, path: String?, method: String): Boolean {
-        logger.info(permission.method + "#" + permission.pathPattern)
+        log.info(permission.method + "#" + permission.pathPattern)
         if (!antPathMatcher.match(permission.pathPattern, path!!)) {
             return false
         }

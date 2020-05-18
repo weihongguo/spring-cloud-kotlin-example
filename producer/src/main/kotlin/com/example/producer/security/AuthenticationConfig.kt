@@ -22,10 +22,8 @@ class ProducerAuthenticationConfig : BaseAuthenticationConfig() {
     }
 }
 
-
 @Service
 class ProducerAuthorizationServiceImpl : AuthorizationService {
-    private val logger = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     lateinit var accountService: AccountService

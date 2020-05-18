@@ -24,7 +24,7 @@ class PermissionServiceImpl : BaseServiceImpl<Permission>(), PermissionService {
     }
 
     override fun listByUserIdAndModule(userId: Long, module: String): List<Permission> {
-        return permissionRepository.findByUserIdAndModule(userId, module)//To change body of created functions use File | Settings | File Templates.
+        return permissionRepository.findByUserIdAndModule(userId, module)
     }
 }
 
