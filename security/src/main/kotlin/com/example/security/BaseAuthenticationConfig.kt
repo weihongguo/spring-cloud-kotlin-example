@@ -2,7 +2,7 @@ package com.example.security
 
 import com.alibaba.fastjson.JSON
 import com.example.base.*
-import com.example.database.entity.NotFoundException
+import com.example.database.entity.EntityNotFoundException
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -79,11 +79,11 @@ abstract class BaseExceptionHandler {
         ))
     }
 
-    @ExceptionHandler(NotFoundException::class)
+    @ExceptionHandler(EntityNotFoundException::class)
     open fun notFoundException(
         servletRequest: HttpServletRequest,
         servletResponse: HttpServletResponse,
-        e: NotFoundException
+        e: EntityNotFoundException
     ): Response {
         servletResponse.status = HttpServletResponse.SC_NOT_FOUND
         return notFoundResponse(e.message ?: "数据不存在", mapOf(

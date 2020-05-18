@@ -47,9 +47,9 @@ class AccountAuthorizationServiceImpl : AccountAuthorizationService {
     override fun getByJwt(jwt: String, module: String): Authorization? {
         var jwtUser = parseJwt(jwtConfig, jwt) ?: return null
         var user = userService.getByJwtUser(jwtUser) ?: return null
-        var authorizationUser = AuthorizationUser(AuthorizationUserType.USER.value, user.id)
+        var authorizationUser = AuthorizationUser(AuthorizationUserType.USER.value, user.id!!)
         val permissionAuthorities: MutableList<PermissionAuthority> = ArrayList()
-        val permissions: List<Permission> = permissionService.listByUserIdAndModule(user.id, module)
+        val permissions: List<Permission> = permissionService.listByUserIdAndModule(user.id!!, module)
         if (permissions.isNotEmpty()) {
             for (permission in permissions) {
                 val authority = PermissionAuthority(permission)

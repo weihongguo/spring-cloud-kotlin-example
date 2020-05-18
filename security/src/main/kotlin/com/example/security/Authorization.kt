@@ -49,7 +49,7 @@ data class PermissionAuthority(var permission: Permission) : GrantedAuthority {
 }
 
 data class Authorization (
-    var user: AuthorizationUser,
+    var user: AuthorizationUser? = null,
     var permissionAuthorities: Collection<PermissionAuthority>? = null
 )
 

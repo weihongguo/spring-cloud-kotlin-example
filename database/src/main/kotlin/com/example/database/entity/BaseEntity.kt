@@ -10,10 +10,14 @@ import javax.persistence.MappedSuperclass
 abstract class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L,
+    var id: Long? = null,
     var createTime: Date? = null,
     var updateTime: Date? = null,
     var deleteTime: Date? = null
 )
 
-class NotFoundException(message: String? = null) : RuntimeException(message)
+class EntityNotFoundException(message: String? = null) : RuntimeException(message ?: "资源不存在")
+
+class EntityExistedException(message: String? = null) : RuntimeException(message ?: "资源已经存在")
+
+class EntityOperateException(message: String? = null) : RuntimeException(message ?: "资源操作错误")

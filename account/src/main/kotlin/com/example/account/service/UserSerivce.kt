@@ -15,11 +15,6 @@ interface UserService : BaseService<User> {
     fun getByJwtUser(jwtUser: JwtUser): User?
 }
 
-@Repository
-interface UserRepository : BaseRepository<User> {
-    fun findByMobile(mobile: String): User?
-}
-
 @Service
 class UserServiceImpl : BaseServiceImpl<User>(), UserService {
 
@@ -41,3 +36,9 @@ class UserServiceImpl : BaseServiceImpl<User>(), UserService {
         return userRepository.findById(jwtUser.id).orElse(null)
     }
 }
+
+@Repository
+interface UserRepository : BaseRepository<User> {
+    fun findByMobile(mobile: String): User?
+}
+

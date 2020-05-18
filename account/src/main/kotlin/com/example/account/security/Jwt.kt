@@ -11,10 +11,8 @@ import java.util.Date
 private const val JWT_USER_SEPARATOR = "#"
 private const val JWT_USER_VALUES_LEN = 2
 
-data class JwtUser (
-    var type: String,
-    var id: Long
-) {
+data class JwtUser (var type: String, var id: Long) {
+
     override fun toString() = "${type}${JWT_USER_SEPARATOR}${id}"
 
     fun check(): Boolean {

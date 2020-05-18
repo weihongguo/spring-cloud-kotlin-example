@@ -22,10 +22,7 @@ data class Permission(
     var pathPattern: String = ""
 ) : BaseEntity()
 
-enum class PermissionMethod (
-    var value: String,
-    var label: String
-) {
+enum class PermissionMethod (var value: String, var label: String) {
     READ("READ", "只读"),
     WRITE("WRITE", "读写"),
     ALL("ALL", "所有")
