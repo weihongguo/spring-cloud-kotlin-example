@@ -20,7 +20,7 @@ data class LoginRequest(var mobile: String, var password: String) {
     }
 }
 
-data class PasswordRequest(var old: String, var new: String) {
+data class PasswordUpdateRequest(var old: String, var new: String) {
 
     fun check(): Boolean {
         if (old.isEmpty() || new.isEmpty()) {

@@ -33,8 +33,8 @@ class LoginController {
         if (!matchesPassword(request.password, user.password)) {
             throw RuntimeException("密码错误")
         }
-        var jwtUser = JwtUser(AuthorizationUserType.USER.value, user.id!!)
-        var authorizationJwt = generateJwt(jwtConfig, jwtUser)
+        val jwtUser = JwtUser(AuthorizationUserType.USER.value, user.id!!)
+        val authorizationJwt = generateJwt(jwtConfig, jwtUser)
         return okResponse(mapOf(
             "authorizationJwt" to authorizationJwt
         ))

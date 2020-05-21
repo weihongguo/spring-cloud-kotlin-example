@@ -3,6 +3,7 @@ package com.example.database
 import com.example.database.entity.BaseEntity
 import com.example.database.entity.EntityNotFoundException
 import com.example.database.entity.EntityOperateException
+import org.springframework.data.domain.Page
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.repository.NoRepositoryBean
@@ -13,7 +14,7 @@ interface BaseReadService<T : BaseEntity> {
     fun getRepository(): BaseReadRepository<T>
 
     fun getById(id: Long): T?
-    fun listByIdIn(ids: Collection<Long>): List<T>?
+    fun listByIdIn(ids: Set<Long>): List<T>?
 }
 
 abstract class BaseReadServiceImpl<T : BaseEntity> : BaseReadService<T> {
@@ -29,7 +30,7 @@ abstract class BaseReadServiceImpl<T : BaseEntity> : BaseReadService<T> {
         return entity
     }
 
-    override fun listByIdIn(ids: Collection<Long>): List<T>? {
+    override fun listByIdIn(ids: Set<Long>): List<T>? {
         if (ids.isEmpty()) {
             return null
         }
@@ -40,7 +41,7 @@ abstract class BaseReadServiceImpl<T : BaseEntity> : BaseReadService<T> {
 @NoRepositoryBean
 interface BaseReadRepository<T : BaseEntity> : Repository<T, Long>, JpaSpecificationExecutor<T> {
     fun findById(id: Long): T?
-    fun findByIdIn(ids: Collection<Long>): List<T>?
+    fun findByIdIn(ids: Set<Long>): List<T>?
 }
 
 /* */
@@ -48,13 +49,20 @@ interface BaseReadRepository<T : BaseEntity> : Repository<T, Long>, JpaSpecifica
 interface BaseService<T : BaseEntity> {
     fun getRepository(): BaseRepository<T>
 
+    fun getFilterConfig(): FilterConfig?
+
     fun getById(id: Long): T?
     fun getByIdWithDeleted(id: Long): T?
 
-    fun save(entity: T): T?
+    fun page(request: FilterRequest): Page<T>
 
-    fun update(entity: T): T?
-    fun updateDirect(entity: T): T?
+    fun save(entity: T): T
+    fun saveAll(entities: Iterable<T>): List<T>
+
+    fun update(entity: T): T
+    fun updateAll(entities: Iterable<T>): List<T>
+
+    fun updateDirect(entity: T): T
 
     fun remove(id: Long): T?
     fun restore(id: Long): T?
@@ -63,30 +71,59 @@ interface BaseService<T : BaseEntity> {
 
 abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
 
+    override fun getFilterConfig(): FilterConfig? {
+        return null
+    }
+
     override fun getById(id: Long): T? {
         val entity = getRepository().findById(id).orElse(null)
-        if (null == entity || null != entity.deleteTime ) {
-            return null
+        entity?.let {
+            if (null == it.deleteTime) {
+                return it
+            }
         }
-        return entity
+        return null
     }
 
     override fun getByIdWithDeleted(id: Long): T? {
         return getRepository().findById(id).orElse(null)
     }
 
-    override fun save(entity: T): T? {
+    override fun page(request: FilterRequest): Page<T> {
+        val filterSpecification = FilterSpecification<T>(request, getFilterConfig())
+        val pageRequest = request.pageRequest()
+        return getRepository().findAll(filterSpecification, pageRequest)
+    }
+
+    override fun save(entity: T): T {
         setForCreate(entity)
         return getRepository().save(entity)
     }
 
-    override fun update(entity: T): T? {
-        val dbEntity = getById(entity.id!!) ?: throw EntityNotFoundException()
-        setForUpdate(dbEntity, entity)
-        return getRepository().save(dbEntity)
+    override fun saveAll(entities: Iterable<T>): List<T> {
+        for (entity in entities) {
+            setForCreate(entity)
+        }
+        return getRepository().saveAll(entities)
     }
 
-    override fun updateDirect(entity: T): T? {
+    override fun update(entity: T): T {
+        entity.id?.let {
+            val dbEntity = getById(it) ?: throw EntityNotFoundException()
+            setForUpdate(dbEntity, entity)
+            return getRepository().save(dbEntity)
+        }
+        throw EntityNotFoundException()
+    }
+
+    override fun updateAll(entities: Iterable<T>): List<T> {
+        for (entity in entities) {
+            setForUpdate(entity)
+        }
+        return getRepository().saveAll(entities)
+    }
+
+    override fun updateDirect(entity: T): T {
         setForUpdate(entity)
         return getRepository().save(entity)
     }
@@ -124,9 +161,15 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
     }
 
     private fun setForUpdate(dbEntity: T, entity: T) {
-        dbEntity.id?.let {
-            dbEntity.updateTime = Date()
-        } ?: throw EntityOperateException("资源更新失败")
+        dbEntity.id?.let { dbId ->
+            entity.id?.let {
+                if (it == dbId) {
+                    dbEntity.updateTime = Date()
+                    return
+                }
+            }
+        }
+        throw EntityOperateException("资源更新失败")
     }
 
     private fun setForRemove(entity: T) {

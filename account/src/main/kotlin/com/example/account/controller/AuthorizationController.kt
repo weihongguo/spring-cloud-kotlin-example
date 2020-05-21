@@ -1,10 +1,7 @@
 package com.example.account.controller
 
 import com.example.account.security.AccountAuthorizationService
-import com.example.base.JwtAuthorizationRequest
-import com.example.base.Response
-import com.example.base.getResponseData
-import com.example.base.okResponse
+import com.example.base.*
 import com.example.security.Authorization
 import com.example.security.AuthorizationService
 import com.example.security.getContextAuthorizationJwt
@@ -31,7 +28,9 @@ class AuthorizationController {
 
     @PostMapping("authorization")
     fun authorization(@RequestBody request: JwtAuthorizationRequest): Response {
-        request.check()
+        if (!request.check()) {
+            throw RequestException()
+        }
         val authorizationJwt = getContextAuthorizationJwt() ?: throw RuntimeException("请先登录")
         if (request.jwt != authorizationJwt) {
             throw RuntimeException("请求参数错误")

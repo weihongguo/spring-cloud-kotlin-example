@@ -14,22 +14,12 @@ const val KEY_AUTHORIZATION = "Authorization"
 const val BEARER_PRE = "Bearer "
 
 class JwtAuthenticationFilter(
-    authenticationManager: AuthenticationManager?,
-    authorizationService: AuthorizationService
+    authenticationManager: AuthenticationManager,
+    private val authorizationService: AuthorizationService
 ) : BasicAuthenticationFilter(authenticationManager) {
 
-    var authorizationService: AuthorizationService
-
-    init {
-        this.authorizationService = authorizationService
-    }
-
     @Throws(IOException::class, ServletException::class)
-    override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        chain: FilterChain
-    ) {
+    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val authorization = request.getHeader(KEY_AUTHORIZATION)
         if (null != authorization && authorization.startsWith(BEARER_PRE)) {
             val jwt = authorization.substring(BEARER_PRE.length)

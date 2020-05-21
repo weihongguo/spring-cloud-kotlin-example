@@ -1,6 +1,6 @@
 package com.example.account.controller
 
-import com.example.account.request.PasswordRequest
+import com.example.account.request.PasswordUpdateRequest
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
@@ -21,7 +21,7 @@ class PasswordController {
     lateinit var userService: UserService
 
     @PutMapping(value = ["password"])
-    fun update(@RequestBody request: PasswordRequest): Response? {
+    fun update(@RequestBody request: PasswordUpdateRequest): Response? {
         if (!request.check()) {
             throw RequestException()
         }

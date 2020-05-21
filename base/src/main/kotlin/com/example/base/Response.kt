@@ -3,25 +3,25 @@ package com.example.base
 import com.fasterxml.jackson.databind.ObjectMapper
 import javax.servlet.http.HttpServletResponse
 
-data class Response(var code: Int, var message: String, var data: Map<String, Any>? = null)
+data class Response(var code: Int, var message: String, var data: Map<String, *>? = null)
 
-fun unauthorizedResponse(data: Map<String, Any>? = null): Response {
+fun unauthorizedResponse(data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_UNAUTHORIZED, "", data)
 }
 
-fun forbiddenResponse(data: Map<String, Any>? = null): Response {
+fun forbiddenResponse(data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_FORBIDDEN, "", data)
 }
 
-fun okResponse(data: Map<String, Any>? = null): Response {
+fun okResponse(data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_OK, "", data)
 }
 
-fun errorResponse(message: String, data: Map<String, Any>? = null): Response {
+fun errorResponse(message: String, data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message, data)
 }
 
-fun notFoundResponse(message: String, data: Map<String, Any>? = null): Response {
+fun notFoundResponse(message: String, data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_FORBIDDEN, message, data)
 }
 
@@ -31,6 +31,6 @@ fun <T> getResponseData(response: Response, key: String, clazz: Class<T>): T? {
     return try {
         ObjectMapper().convertValue(result, clazz)
     } catch (e: Exception) {
-        throw RuntimeException("convertValue: ${e.toString()}")
+        throw RuntimeException("convertValue: $e")
     }
 }
