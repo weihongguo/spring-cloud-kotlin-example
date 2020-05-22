@@ -33,10 +33,9 @@ class RegisterController {
         userService.getByMobile(request.mobile)?.let {
             throw EntityExistedException("用户已经存在")
         }
-        val password = encodePassword(request.password)
-        val user = User(mobile = request.mobile, password = password)
-        userService.save(user)
-        val jwtUser = JwtUser(AuthorizationUserType.USER.value, user.id!!)
+        val user = User(mobile = request.mobile, password = encodePassword(request.password))
+        val saveUser = userService.save(user)
+        val jwtUser = JwtUser(AuthorizationUserType.USER.value, saveUser.id!!)
         val authorizationJwt = generateJwt(jwtConfig, jwtUser)
         return okResponse(mapOf(
             "authorizationJwt" to authorizationJwt

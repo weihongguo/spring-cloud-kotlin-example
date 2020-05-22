@@ -4,6 +4,8 @@ import com.example.database.entity.Permission
 import com.example.database.BaseRepository
 import com.example.database.BaseService
 import com.example.database.BaseServiceImpl
+import com.example.database.entity.Role
+import com.example.database.entity.RolePermission
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -40,3 +42,39 @@ interface PermissionRepository : BaseRepository<Permission> {
     )
     fun findByUserIdAndModule(userId: Long, module: String): List<Permission>
 }
+
+/* */
+
+interface RoleService : BaseService<Role>
+
+@Service
+class RoleServiceImpl : BaseServiceImpl<Role>(), RoleService {
+
+    @Autowired
+    lateinit var roleRepository: RoleRepository
+
+    override fun getRepository(): BaseRepository<Role> {
+        return roleRepository
+    }
+}
+
+@Repository
+interface RoleRepository : BaseRepository<Role>
+
+/* */
+
+interface RolePermissionService : BaseService<RolePermission>
+
+@Service
+class RolePermissionServiceImpl : BaseServiceImpl<RolePermission>(), RolePermissionService {
+
+    @Autowired
+    lateinit var rolePermissionRepository: RolePermissionRepository
+
+    override fun getRepository(): BaseRepository<RolePermission> {
+        return rolePermissionRepository
+    }
+}
+
+@Repository
+interface RolePermissionRepository : BaseRepository<RolePermission>

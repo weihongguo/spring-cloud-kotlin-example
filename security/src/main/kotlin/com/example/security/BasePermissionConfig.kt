@@ -2,6 +2,7 @@ package com.example.security
 
 import com.example.database.entity.Permission
 import com.example.database.entity.PermissionMethod
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler
@@ -33,7 +34,8 @@ class BasePermissionEvaluator(private var antPathMatcher: AntPathMatcher) : Perm
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun hasPermission(authentication: Authentication, path: Any, method: Any): Boolean {
-        log.info("$method : $path")
+        log.info("$method - $path")
+        log.info(authentication.authorities.toString())
         val grantedAuthorities = authentication.authorities as Collection<GrantedAuthority>
         for (grantedAuthority in grantedAuthorities) {
             val permissionAuthority = grantedAuthority as PermissionAuthority
@@ -49,28 +51,34 @@ class BasePermissionEvaluator(private var antPathMatcher: AntPathMatcher) : Perm
     }
 }
 
-data class PermissionAuthority(var permission: Permission) : GrantedAuthority {
+data class PermissionAuthority(var permission: Permission? = null) : GrantedAuthority {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    override fun getAuthority(): String? {
-        return permission.name
+    @JsonIgnore
+    override fun getAuthority(): String {
+        return permission?.let {
+            return it.name
+        } ?: "未知权限"
     }
 
     fun check(antPathMatcher: AntPathMatcher, path: String, method: String): Boolean {
-        log.info("${permission.method} : ${permission.pathPattern}")
-        if (!antPathMatcher.match(permission.pathPattern, path)) {
+        permission?.let {
+            log.info("${it.name} - ${it.method} - ${it.pathPattern}")
+            if (!antPathMatcher.match(it.pathPattern, path)) {
+                return false
+            }
+            if (it.method == PermissionMethod.ALL.value) {
+                return true
+            } else if (it.method == PermissionMethod.WRITE.value) {
+                if (method == PermissionMethod.WRITE.value || method == PermissionMethod.READ.value) {
+                    return true
+                }
+            } else if (it.method == PermissionMethod.READ.value) {
+                if (method == PermissionMethod.READ.value) {
+                    return true
+                }
+            }
             return false
-        }
-        if (permission.method == PermissionMethod.ALL.value) {
-            return true
-        } else if (permission.method == PermissionMethod.WRITE.value) {
-            if (method == PermissionMethod.WRITE.value || method == PermissionMethod.READ.value) {
-                return true
-            }
-        } else if (permission.method == PermissionMethod.READ.value) {
-            if (method == PermissionMethod.READ.value) {
-                return true
-            }
         }
         return false
     }

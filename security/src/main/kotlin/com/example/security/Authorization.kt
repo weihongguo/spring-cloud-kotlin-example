@@ -1,7 +1,7 @@
 package com.example.security
 
 class Authorization (
-    var user: AuthorizationUser,
+    var user: AuthorizationUser? = null,
     var permissionAuthorities: Collection<PermissionAuthority>? = null
 )
 

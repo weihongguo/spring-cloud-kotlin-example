@@ -2,13 +2,16 @@ package com.example.account.security
 
 import com.example.account.service.PermissionService
 import com.example.account.service.UserService
-import com.example.database.entity.Permission
 import com.example.security.*
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.stereotype.Service
-import java.util.*
+import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.util.ArrayList
+
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +35,7 @@ interface AccountAuthorizationService : AuthorizationService {
 
 @Service
 class AccountAuthorizationServiceImpl : AccountAuthorizationService {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     lateinit var userService: UserService
@@ -45,17 +49,27 @@ class AccountAuthorizationServiceImpl : AccountAuthorizationService {
     }
 
     override fun getByJwt(jwt: String, module: String): Authorization? {
-        var jwtUser = parseJwt(jwtConfig, jwt) ?: return null
-        var user = userService.getByJwtUser(jwtUser) ?: return null
-        var authorizationUser = AuthorizationUser(AuthorizationUserType.USER.value, user.id!!)
-        val permissionAuthorities: MutableList<PermissionAuthority> = ArrayList()
-        val permissions: List<Permission> = permissionService.listByUserIdAndModule(user.id!!, module)
-        if (permissions.isNotEmpty()) {
-            for (permission in permissions) {
-                val authority = PermissionAuthority(permission)
-                permissionAuthorities.add(authority)
+        val jwtUser = parseJwt(jwtConfig, jwt) ?: return null
+        val user = userService.getByJwtUser(jwtUser) ?: return null
+        user.id?.let {
+            val authorizationUser = AuthorizationUser(AuthorizationUserType.USER.value, it)
+            val permissions = permissionService.listByUserIdAndModule(it, module)
+            if (permissions.isNotEmpty()) {
+                val permissionAuthorities: MutableList<PermissionAuthority> = ArrayList()
+                for (permission in permissions) {
+                    permissionAuthorities.add(PermissionAuthority(permission))
+                }
+                return Authorization(authorizationUser, permissionAuthorities)
             }
+            return Authorization(authorizationUser)
         }
-        return Authorization(authorizationUser, permissionAuthorities)
+        return null
     }
 }
+
+@Configuration
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+class AccountPermissionConfig : BasePermissionConfig()
+
+@RestControllerAdvice
+class AccountExceptionHandler : BaseExceptionHandler()

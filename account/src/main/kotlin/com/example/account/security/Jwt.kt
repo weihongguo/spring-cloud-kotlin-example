@@ -11,7 +11,7 @@ import java.util.Date
 private const val JWT_USER_SEPARATOR = "#"
 private const val JWT_USER_VALUES_LEN = 2
 
-data class JwtUser (var type: String, var id: Long) {
+class JwtUser (var type: String, var id: Long) {
 
     override fun toString() = "${type}${JWT_USER_SEPARATOR}${id}"
 
@@ -27,7 +27,7 @@ data class JwtUser (var type: String, var id: Long) {
 }
 
 fun String.toJwtUser() : JwtUser? {
-    val values: Array<String> = this.split(JWT_USER_SEPARATOR).toTypedArray()
+    val values = this.split(JWT_USER_SEPARATOR)
     if (JWT_USER_VALUES_LEN != values.size) {
         return null
     }
@@ -43,7 +43,7 @@ object JwtConfig {
 }
 
 fun generateJwt(jwtConfig: JwtConfig, jwtUser: JwtUser): String {
-    var now = Date()
+    val now = Date()
     val builder = Jwts.builder()
     builder.setSubject(jwtUser.toString())
         .setIssuedAt(now)
@@ -53,19 +53,18 @@ fun generateJwt(jwtConfig: JwtConfig, jwtUser: JwtUser): String {
 }
 
 fun parseJwt(jwtConfig: JwtConfig, jwt: String): JwtUser? {
-    var claims = parseJwtClaims(jwtConfig, jwt) ?: return null
-    var subject = claims.subject ?: return null
+    val claims = parseJwtClaims(jwtConfig, jwt) ?: return null
+    val subject = claims.subject ?: return null
     return subject.toJwtUser()
 }
 
 private fun parseJwtClaims(jwtConfig: JwtConfig, jwt: String): Claims? {
-    var parser = Jwts.parser()
+    val parser = Jwts.parser()
     if (jwtConfig.parseKeys.isNotEmpty()) {
-        var keys = jwtConfig.parseKeys.split(",")
+        val keys = jwtConfig.parseKeys.split(",")
         for (key in keys) {
-            var claims = parseJwtClaims(parser, key, jwt)
-            if (claims != null) {
-                return claims
+            parseJwtClaims(parser, key, jwt)?.let {
+                return it
             }
         }
     }

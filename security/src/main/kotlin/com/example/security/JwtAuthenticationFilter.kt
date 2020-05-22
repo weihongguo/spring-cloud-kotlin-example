@@ -18,13 +18,13 @@ class JwtAuthenticationFilter(
     private val authorizationService: AuthorizationService
 ) : BasicAuthenticationFilter(authenticationManager) {
 
-    @Throws(IOException::class, ServletException::class)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
-        val authorization = request.getHeader(KEY_AUTHORIZATION)
-        if (authorization.isNotBlank() && authorization.startsWith(BEARER_PRE)) {
-            val jwt = authorization.substring(BEARER_PRE.length)
-            getAuthorizationToken(jwt)?.let {
-                SecurityContextHolder.getContext().authentication = it
+        request.getHeader(KEY_AUTHORIZATION)?.let { authorization ->
+            if (authorization.isNotBlank() && authorization.startsWith(BEARER_PRE)) {
+                val jwt = authorization.substring(BEARER_PRE.length)
+                getAuthorizationToken(jwt)?.let {
+                    SecurityContextHolder.getContext().authentication = it
+                }
             }
         }
         super.doFilterInternal(request, response, chain)

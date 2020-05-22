@@ -7,7 +7,7 @@ class RequestException(message: String? = null) : RuntimeException(message ?: "è
 data class JwtAuthorizationRequest(var jwt: String, var module: String) {
 
     fun check(): Boolean {
-        if (jwt.isEmpty() || module.isEmpty()) {
+        if (jwt.isBlank() || module.isBlank()) {
             return false
         }
         return true

@@ -28,11 +28,10 @@ class UserRoleController {
         ))
     }
 
-
     @DeleteMapping("{id}/destroy")
     @PreAuthorize("hasPermission('/account/user_role/{id}/destroy', 'DELETE')")
     fun destroy(@PathVariable("id") id: Long): Response? {
-        userRoleService.remove(id)
+        userRoleService.destroy(id)
         return okResponse()
     }
 }

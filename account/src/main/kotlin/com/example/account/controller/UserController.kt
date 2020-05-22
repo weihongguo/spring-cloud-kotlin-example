@@ -33,6 +33,6 @@ class UserController {
     @PreAuthorize("hasPermission('/account/user/page', 'READ')")
     fun page(@RequestBody request: FilterRequest): Response {
         val page = userService.page(request)
-        return pageResponse(page, "roles")
+        return pageResponse(page, "users")
     }
 }

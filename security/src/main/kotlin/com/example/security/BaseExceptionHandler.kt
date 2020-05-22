@@ -5,6 +5,7 @@ import com.example.base.errorResponse
 import com.example.base.forbiddenResponse
 import com.example.base.notFoundResponse
 import com.example.database.entity.EntityNotFoundException
+import org.slf4j.LoggerFactory
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.servlet.http.HttpServletRequest
@@ -36,6 +37,7 @@ abstract class BaseExceptionHandler {
 
     @ExceptionHandler
     open fun unknownException(request: HttpServletRequest, response: HttpServletResponse, e: Exception): Response {
+        e.printStackTrace()
         response.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
         return errorResponse(e.message ?: "服务繁忙，请稍后再试", mapOf(
             "url" to request.requestURL.toString(),

@@ -28,11 +28,10 @@ class RolePermissionController {
         ))
     }
 
-
     @DeleteMapping("{id}/destroy")
     @PreAuthorize("hasPermission('/account/role_permission/{id}/destroy', 'DELETE')")
     fun destroy(@PathVariable("id") id: Long): Response? {
-        rolePermissionService.remove(id)
+        rolePermissionService.destroy(id)
         return okResponse()
     }
 }

@@ -5,6 +5,7 @@ import com.example.database.entity.User
 import com.example.database.BaseRepository
 import com.example.database.BaseService
 import com.example.database.BaseServiceImpl
+import com.example.database.entity.UserRole
 import com.example.security.AuthorizationUserType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
@@ -41,4 +42,22 @@ class UserServiceImpl : BaseServiceImpl<User>(), UserService {
 interface UserRepository : BaseRepository<User> {
     fun findByMobile(mobile: String): User?
 }
+
+/* */
+
+interface UserRoleService : BaseService<UserRole>
+
+@Service
+class UserRoleServiceImpl : BaseServiceImpl<UserRole>(), UserRoleService {
+
+    @Autowired
+    lateinit var rolePermissionRepository: UserRoleRepository
+
+    override fun getRepository(): BaseRepository<UserRole> {
+        return rolePermissionRepository
+    }
+}
+
+@Repository
+interface UserRoleRepository : BaseRepository<UserRole>
 
