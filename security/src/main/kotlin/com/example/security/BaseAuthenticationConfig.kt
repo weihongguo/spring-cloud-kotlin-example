@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * @Author：GuoGuo
+ * @Date 2020/5/21 14:55
+ **/
 abstract class BaseAuthenticationConfig : WebSecurityConfigurerAdapter() {
 
     protected open fun permitMatchers(): Array<String> {
@@ -22,12 +26,11 @@ abstract class BaseAuthenticationConfig : WebSecurityConfigurerAdapter() {
 
     abstract fun getAuthorizationService(): AuthorizationService
 
-    @Throws(Exception::class)
-    protected open fun getAuthenticationFilter(): BasicAuthenticationFilter? {
+    protected open fun getAuthenticationFilter(): BasicAuthenticationFilter {
         return JwtAuthenticationFilter(authenticationManager(), getAuthorizationService())
     }
 
-    protected open fun getAuthenticationEntryPoint(): AuthenticationEntryPoint? {
+    protected open fun getAuthenticationEntryPoint(): AuthenticationEntryPoint {
         return BaseAuthenticationEntryPoint()
     }
 
@@ -61,47 +64,5 @@ class BaseAuthenticationEntryPoint : AuthenticationEntryPoint {
         servletResponse.status = HttpServletResponse.SC_UNAUTHORIZED
         servletResponse.writer.write(JSON.toJSONString(response))
         servletResponse.writer.flush()
-    }
-}
-
-abstract class BaseExceptionHandler {
-
-    @ExceptionHandler(AccessDeniedException::class)
-    open fun accessDeniedException(
-        servletRequest: HttpServletRequest,
-        servletResponse: HttpServletResponse,
-        e: AccessDeniedException
-    ): Response {
-        servletResponse.status = HttpServletResponse.SC_FORBIDDEN
-        return forbiddenResponse(mapOf(
-            "url" to servletRequest.requestURL.toString(),
-            "exception" to e.toString()
-        ))
-    }
-
-    @ExceptionHandler(EntityNotFoundException::class)
-    open fun notFoundException(
-        servletRequest: HttpServletRequest,
-        servletResponse: HttpServletResponse,
-        e: EntityNotFoundException
-    ): Response {
-        servletResponse.status = HttpServletResponse.SC_NOT_FOUND
-        return notFoundResponse(e.message ?: "数据不存在", mapOf(
-            "url" to servletRequest.requestURL.toString(),
-            "exception" to e.toString()
-        ))
-    }
-
-    @ExceptionHandler
-    open fun unknownException(
-        servletRequest: HttpServletRequest,
-        servletResponse: HttpServletResponse,
-        e: Exception
-    ): Response {
-        servletResponse.status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR
-        return errorResponse(e.message ?: "服务繁忙，请稍后再试", mapOf(
-            "url" to servletRequest.requestURL.toString(),
-            "exception" to e.toString()
-        ))
     }
 }

@@ -9,7 +9,7 @@ import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 
-open class FilterRequest(
+class FilterRequest(
     var createTimeStart: Date? = null,
     var createTimeEnd: Date? = null,
     var parentId: Long? = null,
@@ -20,9 +20,9 @@ open class FilterRequest(
     var filterColumns: String? = null,
     var deleted: Int = -1,
 
-    var pageIndex: Int = 1,
-    var pageSize: Int = 15,
-    var sorts: String? = null
+    private var pageIndex: Int = 1,
+    private var pageSize: Int = 15,
+    private var sorts: String? = null
 ) {
     fun pageRequest(): PageRequest {
         return sorts?.let {
@@ -33,7 +33,7 @@ open class FilterRequest(
     }
 
     private fun sort(): Sort {
-        var orderList: MutableList<Sort.Order> = ArrayList()
+        val orderList: MutableList<Sort.Order> = ArrayList()
         sorts?.let {
             val orders = it.split(",")
             for (order in orders) {

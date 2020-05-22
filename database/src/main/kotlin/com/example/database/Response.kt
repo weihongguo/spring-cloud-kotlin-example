@@ -10,7 +10,7 @@ data class Pagination(var pageIndex: Int, var pageSize: Int, var totalElements: 
 fun<T: BaseEntity> pageResponse(page: Page<T>, key: String? = null, extraData: Map<String, *>? = null): Response {
     val list = page.content
     val pagination = Pagination(pageIndex = page.pageable.pageNumber + 1, pageSize = page.pageable.pageSize, totalElements = page.totalElements, totalPages = page.totalPages)
-    var pageData = mapOf(
+    val pageData = mapOf(
         (key ?: "list") to list,
         "pagination" to pagination
     )

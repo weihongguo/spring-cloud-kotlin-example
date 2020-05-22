@@ -21,23 +21,24 @@ class JwtAuthenticationFilter(
     @Throws(IOException::class, ServletException::class)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         val authorization = request.getHeader(KEY_AUTHORIZATION)
-        if (null != authorization && authorization.startsWith(BEARER_PRE)) {
+        if (authorization.isNotBlank() && authorization.startsWith(BEARER_PRE)) {
             val jwt = authorization.substring(BEARER_PRE.length)
-            val authorizationToken = getAuthorizationToken(jwt)
-            if (null != authorizationToken) {
-                SecurityContextHolder.getContext().authentication = authorizationToken
+            getAuthorizationToken(jwt)?.let {
+                SecurityContextHolder.getContext().authentication = it
             }
         }
         super.doFilterInternal(request, response, chain)
     }
 
     private fun getAuthorizationToken(jwt: String): UsernamePasswordAuthenticationToken? {
-        val authorization: Authorization = authorizationService.getByJwt(jwt) ?: return null
-        return UsernamePasswordAuthenticationToken(
-            authorization.user,
-            jwt,
-            authorization.permissionAuthorities
-        )
+        authorizationService.getByJwt(jwt)?.let {
+            return UsernamePasswordAuthenticationToken(
+                it.user,
+                jwt,
+                it.permissionAuthorities
+            )
+        }
+        return null
     }
 }
 

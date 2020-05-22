@@ -11,8 +11,7 @@ class FeignAuthorizationConfig : RequestInterceptor {
 
     override fun apply(requestTemplate: RequestTemplate) {
         val attributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-        val request = attributes.request
-        val authorization = request.getHeader(KEY_AUTHORIZATION)
+        val authorization = attributes.request.getHeader(KEY_AUTHORIZATION)
         requestTemplate.header(KEY_AUTHORIZATION, authorization)
     }
 }

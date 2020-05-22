@@ -3,7 +3,7 @@ package com.example.base
 import com.fasterxml.jackson.databind.ObjectMapper
 import javax.servlet.http.HttpServletResponse
 
-data class Response(var code: Int, var message: String, var data: Map<String, *>? = null)
+class Response(var code: Int, var message: String, var data: Map<String, *>? = null)
 
 fun unauthorizedResponse(data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_UNAUTHORIZED, "", data)
@@ -26,8 +26,8 @@ fun notFoundResponse(message: String, data: Map<String, *>? = null): Response {
 }
 
 fun <T> getResponseData(response: Response, key: String, clazz: Class<T>): T? {
-    var data = response.data ?: throw RuntimeException("data null")
-    var result = data[key] ?: throw RuntimeException("data of $key null")
+    val data = response.data ?: throw RuntimeException("data null")
+    val result = data[key] ?: throw RuntimeException("data of $key null")
     return try {
         ObjectMapper().convertValue(result, clazz)
     } catch (e: Exception) {

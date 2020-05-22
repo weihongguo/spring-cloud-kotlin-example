@@ -29,13 +29,14 @@ abstract class BasePermissionConfig : GlobalMethodSecurityConfiguration() {
     }
 }
 
-class BasePermissionEvaluator(var antPathMatcher: AntPathMatcher) : PermissionEvaluator {
+class BasePermissionEvaluator(private var antPathMatcher: AntPathMatcher) : PermissionEvaluator {
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun hasPermission(authentication: Authentication, path: Any, method: Any): Boolean {
         log.info("$method : $path")
-        val permissionAuthorities = authentication.authorities as Collection<PermissionAuthority>
-        for (permissionAuthority in permissionAuthorities) {
+        val grantedAuthorities = authentication.authorities as Collection<GrantedAuthority>
+        for (grantedAuthority in grantedAuthorities) {
+            val permissionAuthority = grantedAuthority as PermissionAuthority
             if (permissionAuthority.check(antPathMatcher, path as String, method as String)) {
                 return true
             }
@@ -48,27 +49,25 @@ class BasePermissionEvaluator(var antPathMatcher: AntPathMatcher) : PermissionEv
     }
 }
 
-
 data class PermissionAuthority(var permission: Permission) : GrantedAuthority {
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun getAuthority(): String? {
-        return this.permission.name
+        return permission.name
     }
 
-    fun check(antPathMatcher: AntPathMatcher, path: String?, method: String): Boolean {
+    fun check(antPathMatcher: AntPathMatcher, path: String, method: String): Boolean {
         log.info("${permission.method} : ${permission.pathPattern}")
-        if (!antPathMatcher.match(permission.pathPattern, path!!)) {
+        if (!antPathMatcher.match(permission.pathPattern, path)) {
             return false
         }
-        val permissionMethod: String = permission.method
-        if (permissionMethod == PermissionMethod.ALL.value) {
+        if (permission.method == PermissionMethod.ALL.value) {
             return true
-        } else if (permissionMethod == PermissionMethod.WRITE.value) {
+        } else if (permission.method == PermissionMethod.WRITE.value) {
             if (method == PermissionMethod.WRITE.value || method == PermissionMethod.READ.value) {
                 return true
             }
-        } else if (permissionMethod == PermissionMethod.READ.value) {
+        } else if (permission.method == PermissionMethod.READ.value) {
             if (method == PermissionMethod.READ.value) {
                 return true
             }
