@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - Authorization
+      routes:
+        - id: ACCOUNT
+          uri: lb://ACCOUNT
+          predicates:
+            - Path=/api/account/**
+        - id: PRODUCER
+          uri: lb://PRODUCER
+          predicates:
+            - Path=/api/producer/**
+        - id: CONSUMER
+          uri: lb://CONSUMER
+          predicates:
+            - Path=/api/consumer/**
