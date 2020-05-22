@@ -24,7 +24,7 @@ class TestController {
     lateinit var testService: TestService
 
     @GetMapping("{id}")
-    @PreAuthorize("hasPermission('/producer/test/{id}', 'READ')")
+    @PreAuthorize("hasPermission('/consumer/test/{id}', 'READ')")
     fun show(@PathVariable id: Long): Response {
         val rpcResponse = testService.show(id)
         val test = getResponseData(rpcResponse, "test", Test::class.java)

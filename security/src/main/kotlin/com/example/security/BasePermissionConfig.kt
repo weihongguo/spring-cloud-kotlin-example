@@ -35,7 +35,6 @@ class BasePermissionEvaluator(private var antPathMatcher: AntPathMatcher) : Perm
 
     override fun hasPermission(authentication: Authentication, path: Any, method: Any): Boolean {
         log.info("$method - $path")
-        log.info(authentication.authorities.toString())
         val grantedAuthorities = authentication.authorities as Collection<GrantedAuthority>
         for (grantedAuthority in grantedAuthorities) {
             val permissionAuthority = grantedAuthority as PermissionAuthority

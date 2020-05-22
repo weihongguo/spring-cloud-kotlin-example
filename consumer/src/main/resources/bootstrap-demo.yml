@@ -1,0 +1,18 @@
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:5000/eureka
+
+spring:
+  cloud:
+    config:
+      name: consumer
+      profile: demo
+      label: master
+      discovery:
+        enabled: true
+        service-id: CONFIG
+      username: guoguo
+      password: guoguo

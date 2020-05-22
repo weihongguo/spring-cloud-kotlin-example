@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class ConsumerAuthenticationConfig : BaseAuthenticationConfig() {
 
     @Autowired
-    lateinit var producerAuthorizationService: AuthorizationService
+    lateinit var consumerAuthorizationService: AuthorizationService
 
     override fun getAuthorizationService(): AuthorizationService {
-        return producerAuthorizationService
+        return consumerAuthorizationService
     }
 }
 
@@ -31,7 +31,7 @@ class ConsumerAuthorizationServiceImpl : AuthorizationService {
     lateinit var accountService: AccountService
 
     override fun getByJwt(jwt: String): Authorization? {
-        val request = JwtAuthorizationRequest(jwt, "producer")
+        val request = JwtAuthorizationRequest(jwt, "consumer")
         val response = accountService.authorization(request)
         return getResponseData(response, "authorization", Authorization::class.java)
     }

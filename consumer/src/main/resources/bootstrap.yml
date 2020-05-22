@@ -1,0 +1,7 @@
+server:
+  servlet:
+    context-path: /api/consumer
+
+spring:
+  application:
+    name: CONSUMER
