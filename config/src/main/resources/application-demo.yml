@@ -13,7 +13,7 @@ spring:
     config:
       server:
         git:
-          uri: git@192.168.3.2:/git-repositories/guoguo/spring-cloud/kotlin-demo.git
+          uri: guoguo@192.168.3.12:/develop/git-repositories/spring-cloud/kotlin-demo.git
           default-label: master
           search-paths: config-yml
   security:

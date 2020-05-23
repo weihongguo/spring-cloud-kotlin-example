@@ -1,7 +1,7 @@
 package com.example.security
 
 import com.example.database.entity.Permission
-import com.example.database.entity.PermissionMethod
+import com.example.database.entity.PermissionMethodEnum
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.PermissionEvaluator
@@ -66,14 +66,14 @@ data class PermissionAuthority(var permission: Permission? = null) : GrantedAuth
             if (!antPathMatcher.match(it.pathPattern, path)) {
                 return false
             }
-            if (it.method == PermissionMethod.ALL.value) {
+            if (it.method == PermissionMethodEnum.ALL.value) {
                 return true
-            } else if (it.method == PermissionMethod.WRITE.value) {
-                if (method == PermissionMethod.WRITE.value || method == PermissionMethod.READ.value) {
+            } else if (it.method == PermissionMethodEnum.WRITE.value) {
+                if (method == PermissionMethodEnum.WRITE.value || method == PermissionMethodEnum.READ.value) {
                     return true
                 }
-            } else if (it.method == PermissionMethod.READ.value) {
-                if (method == PermissionMethod.READ.value) {
+            } else if (it.method == PermissionMethodEnum.READ.value) {
+                if (method == PermissionMethodEnum.READ.value) {
                     return true
                 }
             }
