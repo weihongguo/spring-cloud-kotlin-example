@@ -29,3 +29,13 @@ class PasswordUpdateRequest(var old: String, var new: String) {
         return true
     }
 }
+
+class InitRequest(var adminUser: RegisterRequest, var normalUser: RegisterRequest) {
+
+    fun check(): Boolean {
+        if (!adminUser.check() || !normalUser.check()) {
+            return false
+        }
+        return true
+    }
+}

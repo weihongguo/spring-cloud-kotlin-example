@@ -8,7 +8,6 @@ import javax.persistence.Entity
  **/
 @Entity
 data class Test(
-    var status: Int = 0,
-    var name: String = "",
-    var sort: Short = 0
+    var intValue: Int = 0,
+    var stingValue: String = ""
 ) : BaseEntity()
