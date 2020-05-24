@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 @Component
 class AuthorizationFilterFactory : AbstractGatewayFilterFactory<Any>() {
 
-    override fun apply(config: Any?): GatewayFilter {
+    override fun apply(config: Any): GatewayFilter {
         return AuthorizationFilter()
     }
 }

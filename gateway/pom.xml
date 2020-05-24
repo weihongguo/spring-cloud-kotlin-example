@@ -16,10 +16,6 @@
 	<name>gateway</name>
 	<description>Demo project for Spring Boot</description>
 
-	<properties>
-		<kotlin.version>1.3.72</kotlin.version>
-	</properties>
-
 	<packaging>jar</packaging>
 
 	<dependencies>
