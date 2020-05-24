@@ -66,7 +66,7 @@ class InitServiceImpl : InitService {
         val role = Role(type = type.value, name = name)
         roleService.save(role)
         permissions?.let {
-            if (it.isEmpty()) {
+            if (it.isNotEmpty()) {
                 val rolePermissions = ArrayList<RolePermission>()
                 for (permission in permissions) {
                     val rolePermission = RolePermission(roleId = role.id!!, permissionId = permission.id!!)

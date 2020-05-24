@@ -22,6 +22,7 @@
 	<modules>
 		<module>eureka</module>
 		<module>config</module>
+		<module>gateway</module>
 		<module>base</module>
 		<module>database</module>
 		<module>security</module>
