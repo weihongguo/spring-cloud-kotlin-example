@@ -1,8 +1,6 @@
 spring:
   cloud:
     gateway:
-      default-filters:
-        - Authorization
       routes:
         - id: ACCOUNT
           uri: lb://ACCOUNT

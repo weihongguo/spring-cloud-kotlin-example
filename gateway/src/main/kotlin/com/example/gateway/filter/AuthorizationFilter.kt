@@ -3,21 +3,16 @@ package com.example.gateway.filter
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
+import org.springframework.cloud.gateway.filter.GlobalFilter
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory
+import org.springframework.core.Ordered
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
 @Component
-class AuthorizationFilterFactory : AbstractGatewayFilterFactory<Any>() {
-
-    override fun apply(config: Any): GatewayFilter {
-        return AuthorizationFilter()
-    }
-}
-
-class AuthorizationFilter : GatewayFilter {
+class AuthorizationFilter : GlobalFilter, Ordered {
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
@@ -35,5 +30,9 @@ class AuthorizationFilter : GatewayFilter {
         return chain.filter(exchange).then(Mono.fromRunnable {
             log.info("$rawPath : auth after")
         })
+    }
+
+    override fun getOrder(): Int {
+        return -100
     }
 }
