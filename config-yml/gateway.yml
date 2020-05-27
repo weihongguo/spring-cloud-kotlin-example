@@ -4,7 +4,7 @@ spring:
       default-filters:
         - name: TimeLog
           args:
-            threshold: 3000
+            threshold: 3
       routes:
         - id: ACCOUNT
           uri: lb://ACCOUNT
