@@ -11,7 +11,7 @@ import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
 @Component
-class TimeLogFilterFactory : AbstractGatewayFilterFactory<TimeLogFilterFactory.Config>(), Ordered {
+class TimeLogGatewayFilterFactory : AbstractGatewayFilterFactory<TimeLogGatewayFilterFactory.Config>(Config::class.java), Ordered {
 
     override fun apply(config: Config): GatewayFilter {
         return TimeLogFilter(config.threshold)
@@ -21,7 +21,7 @@ class TimeLogFilterFactory : AbstractGatewayFilterFactory<TimeLogFilterFactory.C
         return 100
     }
 
-    class Config (var threshold: Int)
+    class Config (var threshold: Int = 3000)
 }
 
 class TimeLogFilter(private var threshold: Int) : GatewayFilter {
