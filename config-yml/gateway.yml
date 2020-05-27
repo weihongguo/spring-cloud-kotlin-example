@@ -1,6 +1,10 @@
 spring:
   cloud:
     gateway:
+      default-filters:
+        - name: TimeLog
+          args:
+            threshold: 3000
       routes:
         - id: ACCOUNT
           uri: lb://ACCOUNT

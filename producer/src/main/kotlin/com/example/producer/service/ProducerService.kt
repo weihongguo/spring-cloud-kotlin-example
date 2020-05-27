@@ -3,7 +3,7 @@ package com.example.producer.service
 import com.example.database.BaseRepository
 import com.example.database.BaseService
 import com.example.database.BaseServiceImpl
-import com.example.database.entity.Test
+import com.example.database.entity.Producer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service
  * @Author：GuoGuo
  * @Date 2020/5/22 15:59
  **/
-interface TestService : BaseService<Test>
+interface ProducerService : BaseService<Producer>
 
 @Service
-class TestServiceImpl : BaseServiceImpl<Test>(), TestService {
+class ProducerServiceImpl : BaseServiceImpl<Producer>(), ProducerService {
 
     @Autowired
-    lateinit var testRepository: TestRepository
+    lateinit var producerRepository: ProducerRepository
 
-    override fun getRepository(): BaseRepository<Test> {
-        return testRepository
+    override fun getRepository(): BaseRepository<Producer> {
+        return producerRepository
     }
 }
 
 @Repository
-interface TestRepository : BaseRepository<Test>
+interface ProducerRepository : BaseRepository<Producer>

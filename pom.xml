@@ -33,7 +33,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<kotlin.version>1.3.71</kotlin.version>
+		<kotlin.version>1.3.72</kotlin.version>
 		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
 	</properties>
 
@@ -78,7 +78,7 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 	</dependencies>
-
+<!--
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
@@ -89,5 +89,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+-->
 </project>

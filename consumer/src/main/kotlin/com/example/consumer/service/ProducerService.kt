@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody
  * @Author：GuoGuo
  * @Date 2020/5/22 18:12
  **/
-@FeignClient(name = "PRODUCER", path = "api/producer/test", configuration = [FeignAuthorizationConfig::class])
-interface TestService {
+@FeignClient(name = "PRODUCER", path = "api/producer/producer", configuration = [FeignAuthorizationConfig::class])
+interface ProducerService {
 
     @GetMapping("{id}")
     fun show(@PathVariable id: Long): Response
