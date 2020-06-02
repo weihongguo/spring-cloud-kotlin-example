@@ -31,4 +31,5 @@ build/
 .vscode/
 
 ### YML ###
-*-example.yml
+*-company.yml
+*-home.yml
