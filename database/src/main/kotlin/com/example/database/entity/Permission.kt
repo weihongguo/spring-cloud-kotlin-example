@@ -3,6 +3,22 @@ package com.example.database.entity
 import javax.persistence.Entity
 
 @Entity
+data class Role (
+    var type: String = "",
+    var name: String = ""
+) : BaseEntity()
+
+enum class RoleTypeEnum (var value: String, var label: String) {
+    USER("user", "用户")
+}
+
+@Entity
+data class RolePermission (
+    var roleId: Long = 0,
+    var permissionId: Long = 0
+) : BaseEntity()
+
+@Entity
 data class Permission(
     var name: String = "",
     var module: String = "",
@@ -22,18 +38,3 @@ enum class PermissionModuleEnum (var value: String, var label: String) {
     CONSUMER("consumer", "消费者")
 }
 
-@Entity
-data class Role (
-    var type: String = "",
-    var name: String = ""
-) : BaseEntity()
-
-enum class RoleTypeEnum (var value: String, var label: String) {
-    USER("user", "用户")
-}
-
-@Entity
-data class RolePermission (
-    var roleId: Long = 0,
-    var permissionId: Long = 0
-) : BaseEntity()

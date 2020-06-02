@@ -5,6 +5,7 @@ import com.example.base.*
 import com.example.security.Authorization
 import com.example.security.AuthorizationService
 import com.example.security.getContextAuthorizationJwt
+import com.example.security.getContextAuthorizationUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -16,6 +17,14 @@ class AuthorizationController {
 
     @Autowired
     lateinit var accountAuthorizationService: AccountAuthorizationService
+
+    @GetMapping("auth_info")
+    fun authInfo(): Response {
+        val authorizationUser = getContextAuthorizationUser() ?: throw RuntimeException("请先登录")
+        return okResponse(mapOf(
+            "authInfo" to authorizationUser
+        ))
+    }
 
     @GetMapping("authorization")
     fun authorization(): Response {

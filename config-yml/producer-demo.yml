@@ -8,5 +8,5 @@ spring:
     password: 123456
 
 schedule:
-  task:
+  test-task:
     cron: "0/30 * * * * ?"

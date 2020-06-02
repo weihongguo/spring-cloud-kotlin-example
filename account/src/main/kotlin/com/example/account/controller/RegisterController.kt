@@ -36,9 +36,9 @@ class RegisterController {
         val user = User(mobile = request.mobile, password = encodePassword(request.password))
         val saveUser = userService.save(user)
         val jwtUser = JwtUser(AuthorizationUserType.USER.value, saveUser.id!!)
-        val authorizationJwt = generateJwt(jwtConfig, jwtUser)
+        val authToken = generateJwt(jwtConfig, jwtUser)
         return okResponse(mapOf(
-            "authorizationJwt" to authorizationJwt
+            "authToken" to authToken
         ))
     }
 }

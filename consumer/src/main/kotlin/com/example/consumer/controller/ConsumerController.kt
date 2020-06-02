@@ -33,7 +33,7 @@ class ConsumerController {
     fun store(@RequestBody consumer: Consumer): Response {
         val saved = consumerService.save(consumer)
         return okResponse(mapOf(
-                "producer" to saved
+            "consumer" to saved
         ))
     }
 
@@ -43,7 +43,7 @@ class ConsumerController {
         consumer.id = id
         val updated= consumerService.update(consumer)
         return okResponse(mapOf(
-                "consumer" to updated
+            "consumer" to updated
         ))
     }
 
@@ -64,7 +64,7 @@ class ConsumerController {
     fun remove(@PathVariable id: Long): Response {
         val removed = consumerService.remove(id)
         return okResponse(mapOf(
-                "consumer" to removed
+            "consumer" to removed
         ))
     }
 
@@ -73,7 +73,7 @@ class ConsumerController {
     fun restore(@PathVariable id: Long): Response {
         val restored = consumerService.restore(id)
         return okResponse(mapOf(
-                "consumer" to restored
+            "consumer" to restored
         ))
     }
 

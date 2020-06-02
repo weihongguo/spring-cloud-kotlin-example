@@ -89,8 +89,8 @@ class InitServiceImpl : InitService {
 
     private fun initNormalPermission(): List<Permission> {
         val permissions = ArrayList<Permission>()
-        permissions.add(Permission(name = "测试管理", module = PermissionModuleEnum.PRODUCER.value, method = PermissionMethodEnum.ALL.value, pathPattern = "/producer/test/**"))
-        permissions.add(Permission(name = "测试管理", module = PermissionModuleEnum.CONSUMER.value, method = PermissionMethodEnum.ALL.value, pathPattern = "/consumer/test/**"))
+        permissions.add(Permission(name = "生产者管理", module = PermissionModuleEnum.PRODUCER.value, method = PermissionMethodEnum.ALL.value, pathPattern = "/producer/producer/**"))
+        permissions.add(Permission(name = "消费者管理", module = PermissionModuleEnum.CONSUMER.value, method = PermissionMethodEnum.ALL.value, pathPattern = "/consumer/consumer/**"))
         return permissionService.saveAll(permissions)
     }
 }

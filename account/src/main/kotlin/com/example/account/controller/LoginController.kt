@@ -34,9 +34,9 @@ class LoginController {
             throw RuntimeException("密码错误")
         }
         val jwtUser = JwtUser(AuthorizationUserType.USER.value, user.id!!)
-        val authorizationJwt = generateJwt(jwtConfig, jwtUser)
+        val authToken = generateJwt(jwtConfig, jwtUser)
         return okResponse(mapOf(
-            "authorizationJwt" to authorizationJwt
+            "authToken" to authToken
         ))
     }
 }

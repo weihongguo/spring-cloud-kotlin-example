@@ -1,4 +1,4 @@
-package com.example.security
+package com.example.base.config
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
@@ -7,11 +7,11 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 
 @Configuration
-class FeignAuthorizationConfig : RequestInterceptor {
+class FeignConfig : RequestInterceptor {
 
     override fun apply(requestTemplate: RequestTemplate) {
         val attributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
-        val authorization = attributes.request.getHeader(KEY_AUTHORIZATION)
-        requestTemplate.header(KEY_AUTHORIZATION, authorization)
+        val authorization = attributes.request.getHeader("Authorization")
+        requestTemplate.header("Authorization", authorization)
     }
 }
