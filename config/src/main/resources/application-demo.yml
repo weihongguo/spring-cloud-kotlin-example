@@ -13,9 +13,9 @@ spring:
     config:
       server:
         git:
-          uri: ubuntu@129.204.84.212:/develop/git-repositories/spring-cloud/kotlin-example.git
+          uri: config.git
           default-label: master
-          search-paths: config-yml
+          search-paths: search-paths
   security:
     basic:
       enabled: true
