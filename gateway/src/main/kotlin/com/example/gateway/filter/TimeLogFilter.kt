@@ -24,7 +24,7 @@ class TimeLogGatewayFilterFactory : AbstractGatewayFilterFactory<TimeLogGatewayF
     class Config (var threshold: Int = 3000)
 }
 
-class TimeLogFilter(private var threshold: Int) : GatewayFilter {
+class TimeLogFilter(private val threshold: Int) : GatewayFilter {
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
