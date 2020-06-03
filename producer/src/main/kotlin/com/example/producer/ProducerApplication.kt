@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 
-@EnableScheduling
+//@EnableScheduling
 @EnableFeignClients
 @EnableDiscoveryClient
 @EntityScan(basePackages = ["com.example.database.entity"])
