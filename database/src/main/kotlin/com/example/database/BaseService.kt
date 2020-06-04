@@ -59,10 +59,7 @@ interface BaseService<T : BaseEntity> {
     fun save(entity: T): T
     fun saveAll(entities: Iterable<T>): List<T>
 
-    fun update(entity: T): T
-    fun updateAll(entities: Iterable<T>): List<T>
-
-    fun updateDirect(entity: T): T
+    fun update(entity: T, direct: Boolean = false): T
 
     fun remove(id: Long): T?
     fun restore(id: Long): T?
@@ -107,7 +104,11 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
         return getRepository().saveAll(entities)
     }
 
-    override fun update(entity: T): T {
+    override fun update(entity: T, direct: Boolean): T {
+        if (direct) {
+            return updateDirect(entity)
+        }
+
         entity.id?.let {
             val dbEntity = getById(it) ?: throw EntityNotFoundException()
             setForUpdate(dbEntity, entity)
@@ -116,14 +117,7 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
         throw EntityNotFoundException()
     }
 
-    override fun updateAll(entities: Iterable<T>): List<T> {
-        for (entity in entities) {
-            setForUpdate(entity)
-        }
-        return getRepository().saveAll(entities)
-    }
-
-    override fun updateDirect(entity: T): T {
+    fun updateDirect(entity: T): T {
         setForUpdate(entity)
         return getRepository().save(entity)
     }
@@ -154,13 +148,7 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
         entity.deleteTime = null
     }
 
-    open fun setForUpdate(entity: T) {
-        entity.id?.let {
-            entity.updateTime = Date()
-        } ?: throw EntityOperateException("资源更新失败")
-    }
-
-    private fun setForUpdate(dbEntity: T, entity: T) {
+    open fun setForUpdate(dbEntity: T, entity: T) {
         dbEntity.id?.let { dbId ->
             entity.id?.let {
                 if (it == dbId) {
@@ -168,6 +156,14 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
                     return
                 }
             }
+        }
+        throw EntityOperateException("资源更新失败")
+    }
+
+    private fun setForUpdate(entity: T) {
+        entity.id?.let {
+            entity.updateTime = Date()
+            return
         }
         throw EntityOperateException("资源更新失败")
     }

@@ -57,6 +57,7 @@ class BaseAuthenticationEntryPoint : AuthenticationEntryPoint {
         e: AuthenticationException
     ) {
         val response = unauthorizedResponse(mapOf(
+            "from" to "security",
             "exception" to e.toString(),
             "url" to servletRequest.requestURI.toString()
         ))

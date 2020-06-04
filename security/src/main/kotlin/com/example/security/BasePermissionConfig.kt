@@ -34,7 +34,7 @@ class BasePermissionEvaluator(private var antPathMatcher: AntPathMatcher) : Perm
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun hasPermission(authentication: Authentication, path: Any, method: Any): Boolean {
-        log.info("$method - $path")
+        // log.info("$method - $path")
         val grantedAuthorities = authentication.authorities as Collection<GrantedAuthority>
         for (grantedAuthority in grantedAuthorities) {
             val permissionAuthority = grantedAuthority as PermissionAuthority
@@ -62,7 +62,7 @@ data class PermissionAuthority(var permission: Permission? = null) : GrantedAuth
 
     fun check(antPathMatcher: AntPathMatcher, path: String, method: String): Boolean {
         permission?.let {
-            log.info("${it.name} - ${it.method} - ${it.pathPattern}")
+            // log.info("${it.name} - ${it.method} - ${it.pathPattern}")
             if (!antPathMatcher.match(it.pathPattern, path)) {
                 return false
             }
