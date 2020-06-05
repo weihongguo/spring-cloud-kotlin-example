@@ -6,10 +6,8 @@ import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.connection.CorrelationData
 import org.springframework.amqp.rabbit.core.RabbitTemplate
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 /**
@@ -23,46 +21,55 @@ const val MQ_CONSUMER_TO_PRODUCER = "consumer_to_producer"
 class MqConfig {
 
     @Bean
-    fun customerToProducer() : Queue {
+    fun customerToProducer(): Queue {
         return Queue(MQ_CONSUMER_TO_PRODUCER)
     }
 }
 
-@Component
-final class MqSender(private val rabbitTemplate: RabbitTemplate) : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
+class MqSender(private var rabbitTemplate: RabbitTemplate) {
     private val log = LoggerFactory.getLogger(javaClass)
-
-    init {
-        rabbitTemplate.setConfirmCallback(this)
-        rabbitTemplate.setReturnCallback(this)
-    }
 
     fun send(routingKey: String, message: String) {
         log.info("send $routingKey $message")
         rabbitTemplate.convertAndSend(routingKey, message)
     }
+}
+
+class RabbitCallback : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    init {
+        print("####### RabbitCallback init #######")
+    }
 
     override fun confirm(correlationData: CorrelationData?, ack: Boolean, cause: String?) {
+        print("####### RabbitCallback confirm #######")
         log.info("### confirm $ack $cause $correlationData ###")
     }
 
     override fun returnedMessage(message: Message, replyCode: Int, replyText: String, exchange: String, routingKey: String) {
+        print("####### RabbitCallback returnedMessage #######")
         log.info("### returnedMessage $message $replyCode $replyText $exchange $routingKey ###")
     }
 }
 
 @Service
-class MqService {
+class MqService(private final var rabbitTemplate: RabbitTemplate) {
 
-    @Autowired
-    lateinit var mqSender: MqSender
+    init {
+        print("####### MqService init #######")
+        val rabbitCallback = RabbitCallback()
+        rabbitTemplate.setReturnCallback(rabbitCallback)
+        rabbitTemplate.setConfirmCallback(rabbitCallback)
+        print("\n\n****##### MqService $rabbitTemplate #######*****\n\n")
+    }
 
     fun send(queue: String, message: String) {
-        mqSender.send(queue, message)
+        print("\n\n****##### MqService $rabbitTemplate #######*****\n\n")
+        rabbitTemplate.convertAndSend(queue, message)
     }
 
     fun sendJson(queue: String, message: Any) {
-        mqSender.send(queue, JSON.toJSONString(message))
+        rabbitTemplate.convertAndSend(queue, JSON.toJSONString(message))
     }
 }
-

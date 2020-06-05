@@ -31,7 +31,7 @@ class PasswordController {
             throw RuntimeException("密码错误")
         }
         user.password = encodePassword(request.new)
-        userService.updateDirect(user)
+        userService.update(user, true)
         return okResponse()
     }
 }

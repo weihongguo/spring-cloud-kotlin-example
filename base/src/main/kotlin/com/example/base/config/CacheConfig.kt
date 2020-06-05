@@ -1,9 +1,6 @@
 package com.example.base.config
 
-import com.alibaba.fastjson.parser.ParserConfig
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer
 import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer
-import org.slf4j.LoggerFactory
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CachingConfigurerSupport
 import org.springframework.context.annotation.Bean
