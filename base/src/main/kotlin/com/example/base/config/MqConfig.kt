@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
  **/
 
 const val MQ_CONSUMER_TO_PRODUCER = "consumer_to_producer"
+const val MQ_CONSUMER_TO_SEARCH = "consumer_to_search"
 
 @Configuration
 class MqConfig {
@@ -24,15 +25,29 @@ class MqConfig {
     fun customerToProducer(): Queue {
         return Queue(MQ_CONSUMER_TO_PRODUCER)
     }
+
+    @Bean
+    fun customerToSearch(): Queue {
+        return Queue(MQ_CONSUMER_TO_SEARCH)
+    }
 }
 
-class MqSender(private var rabbitTemplate: RabbitTemplate) {
-    private val log = LoggerFactory.getLogger(javaClass)
-
-    fun send(routingKey: String, message: String) {
-        log.info("send $routingKey $message")
-        rabbitTemplate.convertAndSend(routingKey, message)
+class MqMessage(
+        var queue: String,
+        var message: String? = null,
+        var modelType: String? = null,
+        var modelId: Long? = null,
+        var operate: String? = null
+) {
+    override fun toString(): String {
+        return "queue: $queue; message: $message; modelType: $modelType; modelId: $modelId, operate: $operate"
     }
+}
+
+enum class MqMessageOperateEnum (var value: String, var label: String) {
+    CREATE("create", "创建"),
+    UPDATE("update", "更新"),
+    DELETE("delete", "删除")
 }
 
 class RabbitCallback : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
@@ -65,11 +80,11 @@ class MqService(private final var rabbitTemplate: RabbitTemplate) {
     }
 
     fun send(queue: String, message: String) {
-        print("\n\n****##### MqService $rabbitTemplate #######*****\n\n")
-        rabbitTemplate.convertAndSend(queue, message)
+        val mqMessage = MqMessage(queue = queue, message = message)
+        rabbitTemplate.convertAndSend(queue, JSON.toJSONString(mqMessage))
     }
 
-    fun sendJson(queue: String, message: Any) {
-        rabbitTemplate.convertAndSend(queue, JSON.toJSONString(message))
+    fun send(message: MqMessage) {
+        rabbitTemplate.convertAndSend(message.queue, JSON.toJSONString(message))
     }
 }

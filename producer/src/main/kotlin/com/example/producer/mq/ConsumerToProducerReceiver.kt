@@ -1,6 +1,8 @@
 package com.example.producer.mq
 
+import com.alibaba.fastjson.JSON
 import com.example.base.config.MQ_CONSUMER_TO_PRODUCER
+import com.example.base.config.MqMessage
 import com.rabbitmq.client.Channel
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
@@ -19,6 +21,8 @@ class ConsumerToProducerReceiver {
     @RabbitListener(queues = [MQ_CONSUMER_TO_PRODUCER])
     fun process(channel: Channel, message: Message) {
         channel.basicAck(message.messageProperties.deliveryTag, false);
-        log.info("receive ${String(message.body)}")
+
+        val mqMessage = JSON.parseObject<MqMessage>(message.body, MqMessage::class.java)
+        log.info("receive ${mqMessage.toString()}")
     }
 }

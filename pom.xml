@@ -29,6 +29,7 @@
 		<module>account</module>
 		<module>producer</module>
 		<module>consumer</module>
+		<module>elasticsearch</module>
 	</modules>
 
 	<properties>
