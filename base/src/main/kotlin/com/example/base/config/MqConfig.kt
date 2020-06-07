@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
  **/
 
 const val MQ_CONSUMER_TO_PRODUCER = "consumer_to_producer"
-const val MQ_CONSUMER_TO_SEARCH = "consumer_to_search"
+const val MQ_CONSUMER_TO_ELASTICSEARCH = "consumer_to_elasticsearch"
 
 @Configuration
 class MqConfig {
@@ -27,20 +27,21 @@ class MqConfig {
     }
 
     @Bean
-    fun customerToSearch(): Queue {
-        return Queue(MQ_CONSUMER_TO_SEARCH)
+    fun customerToElasticsearch(): Queue {
+        return Queue(MQ_CONSUMER_TO_ELASTICSEARCH)
     }
 }
 
 class MqMessage(
         var queue: String,
-        var message: String? = null,
-        var modelType: String? = null,
-        var modelId: Long? = null,
-        var operate: String? = null
+        var message: String = "",
+        var modelType: String = "",
+        var modelId: Long = 0,
+        var operate: String = "",
+        var authorization: String? = null
 ) {
     override fun toString(): String {
-        return "queue: $queue; message: $message; modelType: $modelType; modelId: $modelId, operate: $operate"
+        return "queue: \"$queue\"; message: \"$message\"; modelType: \"$modelType\"; modelId: $modelId, operate: \"$operate\"; authorization: \"$authorization\""
     }
 }
 
@@ -79,7 +80,7 @@ class MqService(private final var rabbitTemplate: RabbitTemplate) {
         print("\n\n****##### MqService $rabbitTemplate #######*****\n\n")
     }
 
-    fun send(queue: String, message: String) {
+    fun send(queue: String, message: String, token: String = "") {
         val mqMessage = MqMessage(queue = queue, message = message)
         rabbitTemplate.convertAndSend(queue, JSON.toJSONString(mqMessage))
     }

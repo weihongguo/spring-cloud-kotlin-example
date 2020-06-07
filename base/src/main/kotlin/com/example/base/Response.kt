@@ -3,7 +3,15 @@ package com.example.base
 import com.fasterxml.jackson.databind.ObjectMapper
 import javax.servlet.http.HttpServletResponse
 
-class Response(var code: Int, var message: String, var data: Map<String, *>? = null)
+data class Response(
+    var code: Int,
+    var message: String,
+    var data: Map<String, *>? = null
+) {
+    override fun toString(): String {
+        return "Response# code: $code; message: \"$message\""
+    }
+}
 
 fun unauthorizedResponse(data: Map<String, *>? = null): Response {
     return Response(HttpServletResponse.SC_UNAUTHORIZED, "", data)

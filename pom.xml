@@ -79,7 +79,7 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 		</dependency>
 	</dependencies>
-
+<!--
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
@@ -90,5 +90,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+-->
 </project>

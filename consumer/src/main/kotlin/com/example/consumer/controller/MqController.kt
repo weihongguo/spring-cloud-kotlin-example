@@ -1,11 +1,9 @@
 package com.example.consumer.controller
 
 import com.example.base.Response
-import com.example.base.config.MQ_CONSUMER_TO_PRODUCER
-import com.example.base.config.MqMessage
-import com.example.base.config.MqMessageOperateEnum
-import com.example.base.config.MqService
+import com.example.base.config.*
 import com.example.base.okResponse
+import com.example.security.getSecurityContextAuthorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,9 +21,23 @@ class MqController {
     lateinit var mqService: MqService
 
     @GetMapping("consumer_to_producer")
-    fun send(): Response {
+    fun consumerToProducer(): Response {
         mqService.send(MQ_CONSUMER_TO_PRODUCER, "hello,world!")
         val mqMessage = MqMessage(queue = MQ_CONSUMER_TO_PRODUCER, modelType = "test", modelId = 0, operate = MqMessageOperateEnum.CREATE.value)
+        mqService.send(mqMessage)
+        return okResponse()
+    }
+
+    @GetMapping("consumer_to_elasticsearch")
+    fun consumerToElasticsearch(): Response {
+        mqService.send(MQ_CONSUMER_TO_ELASTICSEARCH, "hello,world!")
+        val mqMessage = MqMessage(
+                queue = MQ_CONSUMER_TO_ELASTICSEARCH,
+                modelType = "consumer",
+                modelId = 1,
+                operate = MqMessageOperateEnum.CREATE.value,
+                authorization = getSecurityContextAuthorization()
+        )
         mqService.send(mqMessage)
         return okResponse()
     }

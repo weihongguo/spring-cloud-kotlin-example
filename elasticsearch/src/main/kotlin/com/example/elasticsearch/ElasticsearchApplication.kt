@@ -10,8 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @EnableFeignClients
 @EnableDiscoveryClient
 @EntityScan(basePackages = ["com.example.database.entity"])
-@EnableJpaRepositories(basePackages = ["com.example.consumer.service", "com.example.database.service"])
-@SpringBootApplication(scanBasePackages = ["com.example.consumer.**", "com.example.base.config", "com.example.database.service"])
+@EnableJpaRepositories(basePackages = ["com.example.elasticsearch.service", "com.example.database.service"])
+@SpringBootApplication(scanBasePackages = ["com.example.elasticsearch.**", "com.example.base.config", "com.example.database.service"])
 class ElasticsearchApplication
 
 fun main(args: Array<String>) {

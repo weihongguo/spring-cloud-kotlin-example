@@ -4,9 +4,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import java.io.IOException
 import javax.servlet.FilterChain
-import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -21,8 +19,7 @@ class JwtAuthenticationFilter(
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         request.getHeader(KEY_AUTHORIZATION)?.let { authorization ->
             if (authorization.isNotBlank() && authorization.startsWith(BEARER_PRE)) {
-                val jwt = authorization.substring(BEARER_PRE.length)
-                getAuthorizationToken(jwt)?.let {
+                getAuthorizationToken(authorization)?.let {
                     SecurityContextHolder.getContext().authentication = it
                 }
             }
@@ -30,11 +27,12 @@ class JwtAuthenticationFilter(
         super.doFilterInternal(request, response, chain)
     }
 
-    private fun getAuthorizationToken(jwt: String): UsernamePasswordAuthenticationToken? {
+    private fun getAuthorizationToken(authorization: String): UsernamePasswordAuthenticationToken? {
+        val jwt = authorization.substring(BEARER_PRE.length)
         authorizationService.getByJwt(jwt)?.let {
             return UsernamePasswordAuthenticationToken(
                 it.user,
-                jwt,
+                authorization,
                 it.permissionAuthorities
             )
         }
@@ -42,22 +40,22 @@ class JwtAuthenticationFilter(
     }
 }
 
-fun getContextAuthorizationUser(): AuthorizationUser? {
+fun getSecurityContextAuthorizationUser(): AuthorizationUser? {
     return when(val principal = SecurityContextHolder.getContext().authentication.principal) {
         is AuthorizationUser -> principal
         else -> null
     }
 }
 
-fun getContextAuthorizationUserType(): String? {
-    return getContextAuthorizationUser()?.type
+fun getSecurityContextAuthorizationUserType(): String? {
+    return getSecurityContextAuthorizationUser()?.type
 }
 
-fun getContextAuthorizationUserId(): Long? {
-    return getContextAuthorizationUser()?.id
+fun getSecurityContextAuthorizationUserId(): Long? {
+    return getSecurityContextAuthorizationUser()?.id
 }
 
-fun getContextAuthorizationJwt(): String? {
+fun getSecurityContextAuthorization(): String? {
     return when(val credentials = SecurityContextHolder.getContext().authentication.credentials) {
         is String -> credentials
         else -> null
