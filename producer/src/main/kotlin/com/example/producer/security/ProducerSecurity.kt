@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class AuthenticationConfig : BaseAuthenticationConfig() {
 
     @Autowired
-    lateinit var producerAuthorizationService: AuthorizationService
+    lateinit var accountRpcAuthorizationServiceImpl: AuthorizationService
 
     override fun getAuthorizationService(): AuthorizationService {
-        return producerAuthorizationService
+        return accountRpcAuthorizationServiceImpl
     }
 }
 
 @Service
-class AuthorizationServiceImpl : AuthorizationService {
+class AccountRpcAuthorizationServiceImpl : AuthorizationService {
 
     @Autowired
     lateinit var accountRpcService: AccountRpcService
