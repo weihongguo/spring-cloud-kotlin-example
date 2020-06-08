@@ -54,10 +54,6 @@ enum class MqMessageOperateEnum (var value: String, var label: String) {
 class RabbitCallback : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    init {
-        print("####### RabbitCallback init #######")
-    }
-
     override fun confirm(correlationData: CorrelationData?, ack: Boolean, cause: String?) {
         log.info("### confirm $ack $cause $correlationData ###")
     }
@@ -71,11 +67,9 @@ class RabbitCallback : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCall
 class MqService(private final var rabbitTemplate: RabbitTemplate) {
 
     init {
-        print("####### MqService init #######")
         val rabbitCallback = RabbitCallback()
         rabbitTemplate.setConfirmCallback(rabbitCallback)
         rabbitTemplate.setReturnCallback(rabbitCallback)
-        print("\n\n****##### MqService $rabbitTemplate #######*****\n\n")
     }
 
     fun send(queue: String, message: String, token: String = "") {

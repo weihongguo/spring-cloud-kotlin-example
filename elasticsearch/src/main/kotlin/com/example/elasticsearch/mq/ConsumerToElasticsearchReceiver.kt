@@ -41,7 +41,7 @@ class ConsumerToElasticsearchReceiver {
                 if (consumer != null && producer != null) {
                     val consumerDocument = ConsumerDocument(consumer = consumer, producer = producer)
                     consumerDocumentRepository.save(consumerDocument)
-                    log.info("save ${consumerDocument.toString()}")
+                    log.info("save $consumerDocument")
                 }
             }
         }
