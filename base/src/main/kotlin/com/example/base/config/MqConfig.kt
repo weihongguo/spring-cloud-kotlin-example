@@ -59,12 +59,10 @@ class RabbitCallback : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCall
     }
 
     override fun confirm(correlationData: CorrelationData?, ack: Boolean, cause: String?) {
-        print("####### RabbitCallback confirm #######")
         log.info("### confirm $ack $cause $correlationData ###")
     }
 
     override fun returnedMessage(message: Message, replyCode: Int, replyText: String, exchange: String, routingKey: String) {
-        print("####### RabbitCallback returnedMessage #######")
         log.info("### returnedMessage $message $replyCode $replyText $exchange $routingKey ###")
     }
 }
@@ -75,8 +73,8 @@ class MqService(private final var rabbitTemplate: RabbitTemplate) {
     init {
         print("####### MqService init #######")
         val rabbitCallback = RabbitCallback()
-        rabbitTemplate.setReturnCallback(rabbitCallback)
         rabbitTemplate.setConfirmCallback(rabbitCallback)
+        rabbitTemplate.setReturnCallback(rabbitCallback)
         print("\n\n****##### MqService $rabbitTemplate #######*****\n\n")
     }
 
