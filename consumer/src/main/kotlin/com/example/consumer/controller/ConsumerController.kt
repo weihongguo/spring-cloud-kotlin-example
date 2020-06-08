@@ -4,7 +4,7 @@ import com.example.base.Response
 import com.example.base.getResponseData
 import com.example.base.okResponse
 import com.example.consumer.service.ConsumerService
-import com.example.consumer.service.ProducerService
+import com.example.consumer.service.ProducerRpcService
 import com.example.database.FilterRequest
 import com.example.database.entity.Consumer
 import com.example.database.entity.EntityNotFoundException
@@ -25,7 +25,7 @@ class ConsumerController {
     @Autowired
     lateinit var consumerService: ConsumerService
     @Autowired
-    lateinit var producerService: ProducerService
+    lateinit var producerRpcService: ProducerRpcService
 
 
     @PostMapping
@@ -51,7 +51,7 @@ class ConsumerController {
     @PreAuthorize("hasPermission('/consumer/consumer/{id}', 'READ')")
     fun show(@PathVariable id: Long): Response {
         val consumer = consumerService.getById(id) ?: throw EntityNotFoundException()
-        val rpcResponse = producerService.show(consumer.producerId)
+        val rpcResponse = producerRpcService.producerShow(consumer.producerId)
         val producer = getResponseData(rpcResponse, "producer", Producer::class.java)
         return okResponse(mapOf(
             "consumer" to consumer,

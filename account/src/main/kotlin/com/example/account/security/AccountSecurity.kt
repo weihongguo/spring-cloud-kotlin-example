@@ -10,12 +10,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.util.ArrayList
+import java.util.*
 
 
 @Configuration
 @EnableWebSecurity
-class AccountAuthenticationConfig : BaseAuthenticationConfig() {
+class AuthenticationConfig : BaseAuthenticationConfig() {
 
     @Autowired
     lateinit var accountAuthorizationService: AccountAuthorizationService
@@ -69,7 +69,7 @@ class AccountAuthorizationServiceImpl : AccountAuthorizationService {
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-class AccountPermissionConfig : BasePermissionConfig()
+class PermissionConfig : BasePermissionConfig()
 
 @RestControllerAdvice
-class AccountExceptionHandler : BaseExceptionHandler()
+class ExceptionHandler : BaseExceptionHandler()

@@ -2,9 +2,8 @@ package com.example.producer.security
 
 import com.example.base.JwtAuthorizationRequest
 import com.example.base.getResponseData
-import com.example.producer.service.AccountService
+import com.example.producer.service.AccountRpcService
 import com.example.security.*
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @Configuration
 @EnableWebSecurity
-class ProducerAuthenticationConfig : BaseAuthenticationConfig() {
+class AuthenticationConfig : BaseAuthenticationConfig() {
 
     @Autowired
     lateinit var producerAuthorizationService: AuthorizationService
@@ -25,21 +24,21 @@ class ProducerAuthenticationConfig : BaseAuthenticationConfig() {
 }
 
 @Service
-class ProducerAuthorizationServiceImpl : AuthorizationService {
+class AuthorizationServiceImpl : AuthorizationService {
 
     @Autowired
-    lateinit var accountService: AccountService
+    lateinit var accountRpcService: AccountRpcService
 
     override fun getByJwt(jwt: String): Authorization? {
         val request = JwtAuthorizationRequest(jwt, "producer")
-        val response = accountService.authorization(request)
+        val response = accountRpcService.authorization(request)
         return getResponseData(response, "authorization", Authorization::class.java)
     }
 }
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-class ProducerPermissionConfig : BasePermissionConfig()
+class PermissionConfig : BasePermissionConfig()
 
 @RestControllerAdvice
-class ProducerExceptionHandler : BaseExceptionHandler()
+class ExceptionHandler : BaseExceptionHandler()

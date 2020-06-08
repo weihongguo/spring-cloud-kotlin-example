@@ -40,24 +40,31 @@ class JwtAuthenticationFilter(
     }
 }
 
-fun getSecurityContextAuthorizationUser(): AuthorizationUser? {
+fun getSecurityAuthorizationUser(): AuthorizationUser? {
     return when(val principal = SecurityContextHolder.getContext().authentication.principal) {
         is AuthorizationUser -> principal
         else -> null
     }
 }
 
-fun getSecurityContextAuthorizationUserType(): String? {
-    return getSecurityContextAuthorizationUser()?.type
+fun getSecurityAuthorizationUserType(): String? {
+    return getSecurityAuthorizationUser()?.type
 }
 
-fun getSecurityContextAuthorizationUserId(): Long? {
-    return getSecurityContextAuthorizationUser()?.id
+fun getSecurityAuthorizationUserId(): Long? {
+    return getSecurityAuthorizationUser()?.id
 }
 
-fun getSecurityContextAuthorization(): String? {
+fun getSecurityAuthorization(): String? {
     return when(val credentials = SecurityContextHolder.getContext().authentication.credentials) {
         is String -> credentials
         else -> null
     }
+}
+
+fun getSecurityAuthorizationToken(): String? {
+    getSecurityAuthorization()?.let {
+        return it.substring(BEARER_PRE.length)
+    }
+    return null
 }

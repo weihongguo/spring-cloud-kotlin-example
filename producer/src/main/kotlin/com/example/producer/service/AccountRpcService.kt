@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 
 @FeignClient(name = "ACCOUNT", path = "api/account", configuration = [FeignConfig::class])
-interface AccountService {
+interface AccountRpcService {
 
     @PostMapping("authorization")
     fun authorization(@RequestBody request: JwtAuthorizationRequest): Response

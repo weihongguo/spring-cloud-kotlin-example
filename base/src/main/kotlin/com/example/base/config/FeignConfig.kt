@@ -10,12 +10,11 @@ import org.springframework.web.context.request.ServletRequestAttributes
 class FeignConfig : RequestInterceptor {
 
     override fun apply(requestTemplate: RequestTemplate) {
-        val token = requestTemplate.headers().containsKey("Authorization")
-        if (!token) {
+        val authorization = requestTemplate.headers().containsKey("Authorization")
+        if (!authorization) {
             RequestContextHolder.getRequestAttributes()?.let {
                 val attributes = it as ServletRequestAttributes
-                val authorization = attributes.request.getHeader("Authorization")
-                requestTemplate.header("Authorization", authorization)
+                requestTemplate.header("Authorization", attributes.request.getHeader("Authorization"))
             }
         }
     }

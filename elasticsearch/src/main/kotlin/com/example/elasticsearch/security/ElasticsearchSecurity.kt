@@ -2,7 +2,7 @@ package com.example.elasticsearch.security
 
 import com.example.base.JwtAuthorizationRequest
 import com.example.base.getResponseData
-import com.example.elasticsearch.service.AccountService
+import com.example.elasticsearch.service.AccountRpcService
 import com.example.security.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class AuthenticationConfig : BaseAuthenticationConfig() {
 
     @Autowired
-    lateinit var accountAuthorizationService: AuthorizationService
+    lateinit var elasticsearchAuthorizationService: AuthorizationService
 
     override fun getAuthorizationService(): AuthorizationService {
-        return accountAuthorizationService
+        return elasticsearchAuthorizationService
     }
 }
 
@@ -27,11 +27,11 @@ class AuthenticationConfig : BaseAuthenticationConfig() {
 class AuthorizationServiceImpl : AuthorizationService {
 
     @Autowired
-    lateinit var accountService: AccountService
+    lateinit var accountRpcService: AccountRpcService
 
     override fun getByJwt(jwt: String): Authorization? {
         val request = JwtAuthorizationRequest(jwt, "elasticsearch")
-        val response = accountService.authorization(request)
+        val response = accountRpcService.authorization(request)
         return getResponseData(response, "authorization", Authorization::class.java)
     }
 }

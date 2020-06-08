@@ -7,7 +7,7 @@ import com.example.base.Response
 import com.example.base.okResponse
 import com.example.database.entity.EntityNotFoundException
 import com.example.security.encodePassword
-import com.example.security.getContextAuthorizationUser
+import com.example.security.getSecurityAuthorizationUser
 import com.example.security.matchesPassword
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PutMapping
@@ -25,7 +25,7 @@ class PasswordController {
         if (!request.check()) {
             throw RequestException()
         }
-        val authorizationUser = getContextAuthorizationUser() ?: throw RuntimeException()
+        val authorizationUser = getSecurityAuthorizationUser() ?: throw RuntimeException()
         val user = userService.getById(authorizationUser.id) ?: throw EntityNotFoundException()
         if (!matchesPassword(request.old, user.password)) {
             throw RuntimeException("密码错误")

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable
  * @Author：GuoGuo
  * @Date 2020/5/22 18:12
  **/
-@FeignClient(name = "PRODUCER", path = "api/producer/producer", configuration = [FeignConfig::class])
-interface ProducerService {
+@FeignClient(name = "PRODUCER", path = "api/producer", configuration = [FeignConfig::class])
+interface ProducerRpcService {
 
-    @GetMapping("{id}")
-    fun show(@PathVariable id: Long): Response
+    @GetMapping("producer/{id}")
+    fun producerShow(@PathVariable id: Long): Response
 }

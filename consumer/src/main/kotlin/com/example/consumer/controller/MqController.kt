@@ -3,7 +3,7 @@ package com.example.consumer.controller
 import com.example.base.Response
 import com.example.base.config.*
 import com.example.base.okResponse
-import com.example.security.getSecurityContextAuthorization
+import com.example.security.getSecurityAuthorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -36,7 +36,7 @@ class MqController {
                 modelType = "consumer",
                 modelId = 1,
                 operate = MqMessageOperateEnum.CREATE.value,
-                authorization = getSecurityContextAuthorization()
+                authorization = getSecurityAuthorization()
         )
         mqService.send(mqMessage)
         return okResponse()

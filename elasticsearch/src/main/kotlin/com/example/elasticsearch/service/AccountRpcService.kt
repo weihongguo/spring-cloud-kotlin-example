@@ -1,4 +1,4 @@
-package com.example.consumer.service
+package com.example.elasticsearch.service
 
 import com.example.base.JwtAuthorizationRequest
 import com.example.base.Response
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
  * @Date 2020/5/22 18:10
  **/
 @FeignClient(name = "ACCOUNT", path = "api/account", configuration = [FeignConfig::class])
-interface AccountService {
+interface AccountRpcService {
 
     @PostMapping("authorization")
     fun authorization(@RequestBody request: JwtAuthorizationRequest): Response
