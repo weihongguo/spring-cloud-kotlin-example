@@ -15,11 +15,13 @@ import org.springframework.stereotype.Service
  * @Date 2020/6/4 16:10
  **/
 
-const val MQ_CONSUMER_TO_PRODUCER = "consumer_to_producer"
-const val MQ_CONSUMER_TO_ELASTICSEARCH = "consumer_to_elasticsearch"
-
 @Configuration
 class MqConfig {
+
+    companion object {
+        const val MQ_CONSUMER_TO_PRODUCER = "consumer_to_producer"
+        const val MQ_CONSUMER_TO_ELASTICSEARCH = "consumer_to_elasticsearch"
+    }
 
     @Bean
     fun customerToProducer(): Queue {
@@ -29,55 +31,5 @@ class MqConfig {
     @Bean
     fun customerToElasticsearch(): Queue {
         return Queue(MQ_CONSUMER_TO_ELASTICSEARCH)
-    }
-}
-
-class MqMessage(
-        var queue: String,
-        var message: String = "",
-        var modelType: String = "",
-        var modelId: Long = 0,
-        var operate: String = "",
-        var authorization: String? = null
-) {
-    override fun toString(): String {
-        return "queue: \"$queue\"; message: \"$message\"; modelType: \"$modelType\"; modelId: $modelId, operate: \"$operate\"; authorization: \"$authorization\""
-    }
-}
-
-enum class MqMessageOperateEnum (var value: String, var label: String) {
-    CREATE("create", "创建"),
-    UPDATE("update", "更新"),
-    DELETE("delete", "删除")
-}
-
-class RabbitCallback : RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
-    private val log = LoggerFactory.getLogger(javaClass)
-
-    override fun confirm(correlationData: CorrelationData?, ack: Boolean, cause: String?) {
-        log.info("### confirm $ack $cause $correlationData ###")
-    }
-
-    override fun returnedMessage(message: Message, replyCode: Int, replyText: String, exchange: String, routingKey: String) {
-        log.info("### returnedMessage $message $replyCode $replyText $exchange $routingKey ###")
-    }
-}
-
-@Service
-class MqService(private final var rabbitTemplate: RabbitTemplate) {
-
-    init {
-        val rabbitCallback = RabbitCallback()
-        rabbitTemplate.setConfirmCallback(rabbitCallback)
-        rabbitTemplate.setReturnCallback(rabbitCallback)
-    }
-
-    fun send(queue: String, message: String, token: String = "") {
-        val mqMessage = MqMessage(queue = queue, message = message)
-        rabbitTemplate.convertAndSend(queue, JSON.toJSONString(mqMessage))
-    }
-
-    fun send(message: MqMessage) {
-        rabbitTemplate.convertAndSend(message.queue, JSON.toJSONString(message))
     }
 }

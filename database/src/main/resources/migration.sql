@@ -133,3 +133,21 @@ create table if not exists schedule_log (
     primary key (id),
     index idx_schedule_job (schedule_job_id)
 );
+
+# mq_fail_log
+
+drop table if exists mq_fail_log;
+
+create table if not exists mq_fail_log (
+    id bigint not null auto_increment,
+    create_time timestamp null,
+    update_time timestamp null,
+    delete_time timestamp null,
+    queue varchar(64) null,
+    correlation_id varchar(255) null,
+    message varchar(255) null,
+    operate char(16) not null,
+    reason char(255) not null,
+    primary key (id),
+    index idx_queue (queue)
+);

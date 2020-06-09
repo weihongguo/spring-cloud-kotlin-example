@@ -1,8 +1,12 @@
 package com.example.consumer.controller
 
 import com.example.base.Response
-import com.example.base.config.*
+import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
+import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
 import com.example.base.okResponse
+import com.example.database.service.EntityMessage
+import com.example.database.service.EntityMessageOperateEnum
+import com.example.database.service.MqService
 import com.example.security.getSecurityAuthorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,21 +27,24 @@ class MqController {
 
     @GetMapping("consumer_to_producer")
     fun consumerToProducer(): Response {
-        mqService.send(MQ_CONSUMER_TO_PRODUCER, "hello,world!")
-        val mqMessage = MqMessage(queue = MQ_CONSUMER_TO_PRODUCER, modelType = "test", modelId = 0, operate = MqMessageOperateEnum.CREATE.value)
-        mqService.send(mqMessage)
+        val entityMessage = EntityMessage(
+            queue = MQ_CONSUMER_TO_PRODUCER,
+            entityType = "producer",
+            entityId = 1,
+            operate = EntityMessageOperateEnum.CREATE.value
+        )
+        mqService.send(entityMessage)
         return okResponse()
     }
 
     @GetMapping("consumer_to_elasticsearch/{id}")
     fun consumerToElasticsearch(@PathVariable id: Long): Response {
-        mqService.send(MQ_CONSUMER_TO_ELASTICSEARCH, "hello,world!")
-        val mqMessage = MqMessage(
-                queue = MQ_CONSUMER_TO_ELASTICSEARCH,
-                modelType = "consumer",
-                modelId = id,
-                operate = MqMessageOperateEnum.CREATE.value,
-                authorization = getSecurityAuthorization()
+        val mqMessage = EntityMessage(
+            queue = MQ_CONSUMER_TO_ELASTICSEARCH,
+            entityType = "consumer",
+            entityId = id,
+            operate = EntityMessageOperateEnum.CREATE.value,
+            authorization = getSecurityAuthorization()
         )
         mqService.send(mqMessage)
         return okResponse()

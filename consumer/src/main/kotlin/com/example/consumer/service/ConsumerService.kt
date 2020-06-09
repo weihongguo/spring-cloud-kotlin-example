@@ -1,8 +1,8 @@
 package com.example.consumer.service
 
-import com.example.database.BaseRepository
-import com.example.database.BaseService
-import com.example.database.BaseServiceImpl
+import com.example.database.service.BaseRepository
+import com.example.database.service.BaseService
+import com.example.database.service.BaseServiceImpl
 import com.example.database.entity.Consumer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository

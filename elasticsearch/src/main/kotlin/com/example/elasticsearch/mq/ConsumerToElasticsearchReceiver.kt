@@ -1,11 +1,11 @@
 package com.example.elasticsearch.mq
 
 import com.alibaba.fastjson.JSON
-import com.example.base.config.MQ_CONSUMER_TO_ELASTICSEARCH
-import com.example.base.config.MqMessage
+import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
 import com.example.base.getResponseData
 import com.example.database.entity.Consumer
 import com.example.database.entity.Producer
+import com.example.database.service.EntityMessage
 import com.example.elasticsearch.document.ConsumerDocument
 import com.example.elasticsearch.service.ConsumerDocumentRepository
 import com.example.elasticsearch.service.ConsumerRpcService
@@ -29,12 +29,12 @@ class ConsumerToElasticsearchReceiver {
     fun process(channel: Channel, message: Message) {
         channel.basicAck(message.messageProperties.deliveryTag, false);
 
-        val mqMessage = JSON.parseObject<MqMessage>(message.body, MqMessage::class.java)
-        log.info("receive $mqMessage")
+        val entityMessage = JSON.parseObject<EntityMessage>(message.body, EntityMessage::class.java)
+        log.info("receive $entityMessage")
 
-        mqMessage.authorization?.let {
-            if (mqMessage.modelType == "consumer" && mqMessage.modelId > 0) {
-                val response = consumerRpcService.consumerShow(mqMessage.modelId, it)
+        entityMessage.authorization?.let {
+            if (entityMessage.entityType == "consumer" && entityMessage.entityId > 0) {
+                val response = consumerRpcService.consumerShow(entityMessage.entityId, it)
                 log.info("rpc receive $response")
                 val consumer = getResponseData(response, "consumer", Consumer::class.java)
                 val producer = getResponseData(response, "producer", Producer::class.java)

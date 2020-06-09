@@ -2,9 +2,9 @@ package com.example.account.service
 
 import com.example.account.security.JwtUser
 import com.example.database.entity.User
-import com.example.database.BaseRepository
-import com.example.database.BaseService
-import com.example.database.BaseServiceImpl
+import com.example.database.service.BaseRepository
+import com.example.database.service.BaseService
+import com.example.database.service.BaseServiceImpl
 import com.example.database.entity.UserRole
 import com.example.security.AuthorizationUserType
 import org.springframework.beans.factory.annotation.Autowired

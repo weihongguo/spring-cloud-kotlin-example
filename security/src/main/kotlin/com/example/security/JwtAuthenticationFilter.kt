@@ -8,8 +8,8 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-const val KEY_AUTHORIZATION = "Authorization"
-const val BEARER_PRE = "Bearer "
+private const val KEY_AUTHORIZATION = "Authorization"
+private const val BEARER_PRE = "Bearer "
 
 class JwtAuthenticationFilter(
     authenticationManager: AuthenticationManager,
@@ -63,8 +63,5 @@ fun getSecurityAuthorization(): String? {
 }
 
 fun getSecurityAuthorizationToken(): String? {
-    getSecurityAuthorization()?.let {
-        return it.substring(BEARER_PRE.length)
-    }
-    return null
+    return getSecurityAuthorization()?.substring(BEARER_PRE.length)
 }

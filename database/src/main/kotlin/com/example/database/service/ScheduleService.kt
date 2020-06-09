@@ -1,7 +1,5 @@
 package com.example.database.service
 
-import com.example.database.BaseRepository
-import com.example.database.BaseServiceImpl
 import com.example.database.entity.ScheduleJob
 import com.example.database.entity.ScheduleLog
 import com.example.database.entity.ScheduleResultEnum

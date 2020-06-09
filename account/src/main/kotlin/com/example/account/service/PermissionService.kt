@@ -1,9 +1,9 @@
 package com.example.account.service
 
 import com.example.database.entity.Permission
-import com.example.database.BaseRepository
-import com.example.database.BaseService
-import com.example.database.BaseServiceImpl
+import com.example.database.service.BaseRepository
+import com.example.database.service.BaseService
+import com.example.database.service.BaseServiceImpl
 import com.example.database.entity.Role
 import com.example.database.entity.RolePermission
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,5 +1,8 @@
-package com.example.database
+package com.example.database.service
 
+import com.example.database.FilterConfig
+import com.example.database.FilterRequest
+import com.example.database.FilterSpecification
 import com.example.database.entity.BaseEntity
 import com.example.database.entity.EntityNotFoundException
 import com.example.database.entity.EntityOperateException
@@ -17,7 +20,8 @@ interface BaseReadService<T : BaseEntity> {
     fun listByIdIn(ids: Set<Long>): List<T>?
 }
 
-abstract class BaseReadServiceImpl<T : BaseEntity> : BaseReadService<T> {
+abstract class BaseReadServiceImpl<T : BaseEntity> :
+    BaseReadService<T> {
 
     override fun getById(id: Long): T? {
         if (id < 0) {
@@ -87,7 +91,8 @@ abstract class BaseServiceImpl<T : BaseEntity> : BaseService<T> {
     }
 
     override fun page(request: FilterRequest): Page<T> {
-        val filterSpecification = FilterSpecification<T>(request, getFilterConfig())
+        val filterSpecification =
+            FilterSpecification<T>(request, getFilterConfig())
         val pageRequest = request.pageRequest()
         return getRepository().findAll(filterSpecification, pageRequest)
     }
