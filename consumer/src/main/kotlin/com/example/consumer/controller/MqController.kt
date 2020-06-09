@@ -4,6 +4,7 @@ import com.example.base.Response
 import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
 import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
 import com.example.base.okResponse
+import com.example.database.service.CustomMessage
 import com.example.database.service.EntityMessage
 import com.example.database.service.EntityMessageOperateEnum
 import com.example.database.service.MqService
@@ -27,6 +28,11 @@ class MqController {
 
     @GetMapping("consumer_to_producer")
     fun consumerToProducer(): Response {
+        val customMessage = CustomMessage(
+            queue = MQ_CONSUMER_TO_PRODUCER,
+            content = "hello, world!"
+        )
+        mqService.send(customMessage)
         val entityMessage = EntityMessage(
             queue = MQ_CONSUMER_TO_PRODUCER,
             entityType = "producer",

@@ -8,9 +8,7 @@ data class Response(
     var message: String,
     var data: Map<String, *>? = null
 ) {
-    override fun toString(): String {
-        return "Response# code: $code; message: \"$message\""
-    }
+    override fun toString(): String = "Response [code=$code message=$message]"
 }
 
 fun unauthorizedResponse(data: Map<String, *>? = null): Response {

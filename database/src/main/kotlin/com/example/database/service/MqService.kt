@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
+import java.net.URLEncoder
 
 /**
  * @Author：GuoGuo
@@ -23,10 +24,10 @@ data class CustomMessage (
     var content: String,
     var authorization: String? = null
 ) {
-    fun uuid(): String = "custom#:#$queue#:#$content"
+    fun uuid(): String = "${queue}?content=${URLEncoder.encode(content, "utf-8")}&time=${System.currentTimeMillis()}"
 
     override fun toString(): String {
-        return "queue: \"$queue\"; content: \"$content\"; authorization: \"$authorization\""
+        return "CustomMessage [queue=$queue content=$content authorization=$authorization]"
     }
 }
 
@@ -38,10 +39,10 @@ data class EntityMessage (
     var authorization: String? = null
 ) {
 
-    fun uuid(): String = "entity#:#$queue#:#$entityType#:#$entityId#:#$operate"
+    fun uuid(): String = "${queue}?entityType=${entityType}&entityId=${entityId}&operate=${operate}"
 
     override fun toString(): String {
-        return "queue: \"$queue\"; entityType: \"$entityType\"; entityId: $entityId, operate: \"$operate\"; authorization: \"$authorization\""
+        return "EntityMessage [queue=$queue entityType=$entityType entityId=$entityId operate=$operate authorization= $authorization]"
     }
 }
 
@@ -74,7 +75,7 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
 
     fun send(customMessage: CustomMessage) {
         val json = JSON.toJSONString(customMessage)
-        val uuid = "${System.currentTimeMillis()}###${customMessage.uuid()}"
+        val uuid = customMessage.uuid()
         val message = MessageBuilder.withBody(json.toByteArray())
             .setContentType(MessageProperties.CONTENT_TYPE_JSON)
             .setCorrelationId(uuid)
@@ -85,7 +86,7 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
 
     fun send(entityMessage: EntityMessage) {
         val json = JSON.toJSONString(entityMessage)
-        val uuid = "${System.currentTimeMillis()}###${entityMessage.uuid()}"
+        val uuid = entityMessage.uuid()
         val message = MessageBuilder.withBody(json.toByteArray())
             .setContentType(MessageProperties.CONTENT_TYPE_JSON)
             .setCorrelationId(uuid)
@@ -105,7 +106,7 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
             )
             mqFailLogService.save(mqFailLog)
         }
-        log.info("### confirm $ack $cause $correlationData ###")
+        log.info("### confirm $ack $cause ${correlationData?.id} ###")
     }
 
     override fun returnedMessage(message: Message, replyCode: Int, replyText: String, exchange: String, routingKey: String) {
