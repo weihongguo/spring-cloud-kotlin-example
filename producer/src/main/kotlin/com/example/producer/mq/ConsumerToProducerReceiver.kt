@@ -2,8 +2,6 @@ package com.example.producer.mq
 
 import com.alibaba.fastjson.JSON
 import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
-import com.example.database.entity.MqFailLog
-import com.example.database.entity.MqFailLogOperateEnum
 import com.example.database.service.EntityMessage
 import com.example.database.service.MqFailLogService
 import com.rabbitmq.client.Channel
@@ -48,13 +46,7 @@ class ConsumerToProducerReceiver {
 
             log.info("ConsumerToProducerReceiver deal success $entityMessage")
         } catch (e: Exception) {
-            val mqFailLog = MqFailLog(
-                queue = QUEUE,
-                message = String(message.body),
-                operate = MqFailLogOperateEnum.PROCESS.value,
-                reason = e.toString()
-            )
-            mqFailLogService.save(mqFailLog)
+            mqFailLogService.processFail(QUEUE, String(message.body), e.toString())
         }
     }
 }

@@ -96,30 +96,24 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
 
     override fun confirm(correlationData: CorrelationData?, ack: Boolean, cause: String?) {
         if (!ack) {
-            val correlationId = correlationData?.id
+            val correlationId = correlationData?.id ?: "unknown"
             val reason = cause ?: "unknown"
-            val mqFailLog = MqFailLog(
-                correlationId = correlationId,
-                operate = MqFailLogOperateEnum.CONFIRM.value,
-                reason = reason
-            )
-            mqFailLogService.save(mqFailLog)
+            mqFailLogService.confirmFail(correlationId, reason)
         }
         log.info("### message queue confirm $correlationData ack=$ack cause=$cause ###")
     }
 
     override fun returnedMessage(message: Message, replyCode: Int, replyText: String, exchange: String, routingKey: String) {
         val reason = "returnedMessage [replyCode=$replyCode replyText=$replyText exchange=$exchange routingKey=$routingKey]"
-        val mqFailLog = MqFailLog(
-            message = String(message.body),
-            operate = MqFailLogOperateEnum.RETURNED_MESSAGE.value,
-            reason = reason
-        )
-        mqFailLogService.save(mqFailLog)
+        mqFailLogService.returnMessageFail(message.messageProperties.correlationId, String(message.body), reason)
     }
 }
 
-interface MqFailLogService : BaseService<MqFailLog>
+interface MqFailLogService : BaseService<MqFailLog> {
+    fun confirmFail(correlationId: String, reason: String)
+    fun returnMessageFail(correlationId: String, message: String, reason: String)
+    fun processFail(queue: String, message: String, reason: String)
+}
 
 @Service
 class MqFailLogServiceImpl : BaseServiceImpl<MqFailLog>(), MqFailLogService {
@@ -129,6 +123,35 @@ class MqFailLogServiceImpl : BaseServiceImpl<MqFailLog>(), MqFailLogService {
 
     override fun getRepository(): BaseRepository<MqFailLog> {
         return mqFailLogRepository
+    }
+
+    override fun confirmFail(correlationId: String, reason: String) {
+        val mqFailLog = MqFailLog(
+            correlationId = correlationId,
+            operate = MqFailLogOperateEnum.CONFIRM.value,
+            reason = reason
+        )
+        this.save(mqFailLog)
+    }
+
+    override fun returnMessageFail(correlationId: String, message: String, reason: String) {
+        val mqFailLog = MqFailLog(
+            correlationId = correlationId,
+            message = message,
+            operate = MqFailLogOperateEnum.RETURNED_MESSAGE.value,
+            reason = reason
+        )
+        this.save(mqFailLog)
+    }
+
+    override fun processFail(queue: String, message: String, reason: String) {
+        val mqFailLog = MqFailLog(
+            queue = queue,
+            message = message,
+            operate = MqFailLogOperateEnum.PROCESS.value,
+            reason = reason
+        )
+        this.save(mqFailLog)
     }
 }
 
