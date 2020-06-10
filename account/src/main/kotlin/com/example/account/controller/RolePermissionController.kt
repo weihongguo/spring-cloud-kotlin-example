@@ -2,8 +2,8 @@ package com.example.account.controller
 
 import com.example.account.service.RolePermissionService
 import com.example.base.Response
+import com.example.base.model.RolePermission
 import com.example.base.okResponse
-import com.example.database.entity.RolePermission
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*

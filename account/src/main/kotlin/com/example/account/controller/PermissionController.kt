@@ -1,15 +1,12 @@
 package com.example.account.controller
 
 import com.example.account.service.PermissionService
-import com.example.account.service.RoleService
+import com.example.base.FilterRequest
 import com.example.base.Response
+import com.example.base.model.Permission
 import com.example.base.okResponse
-import com.example.database.FilterRequest
-import com.example.database.entity.Permission
-import com.example.database.entity.Role
-import com.example.database.pageResponse
+import com.example.base.pageResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Page
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 

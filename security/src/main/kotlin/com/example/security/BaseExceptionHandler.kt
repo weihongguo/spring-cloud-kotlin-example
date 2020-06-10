@@ -3,11 +3,11 @@ package com.example.security
 import com.example.base.Response
 import com.example.base.errorResponse
 import com.example.base.forbiddenResponse
+import com.example.base.model.ModelNotFoundException
 import com.example.base.notFoundResponse
-import com.example.database.entity.EntityNotFoundException
-import org.slf4j.LoggerFactory
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.ExceptionHandler
+import javax.persistence.EntityNotFoundException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -26,7 +26,7 @@ abstract class BaseExceptionHandler {
         ))
     }
 
-    @ExceptionHandler(EntityNotFoundException::class)
+    @ExceptionHandler(ModelNotFoundException::class)
     open fun notFoundException(request: HttpServletRequest, response: HttpServletResponse, e: EntityNotFoundException): Response {
         response.status = HttpServletResponse.SC_NOT_FOUND
         return notFoundResponse(e.message ?: "数据不存在", mapOf(

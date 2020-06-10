@@ -4,8 +4,8 @@ import com.example.account.request.PasswordUpdateRequest
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
+import com.example.base.model.ModelNotFoundException
 import com.example.base.okResponse
-import com.example.database.entity.EntityNotFoundException
 import com.example.security.encodePassword
 import com.example.security.getSecurityAuthorizationUser
 import com.example.security.matchesPassword
@@ -26,7 +26,7 @@ class PasswordController {
             throw RequestException()
         }
         val authorizationUser = getSecurityAuthorizationUser() ?: throw RuntimeException()
-        val user = userService.getById(authorizationUser.id) ?: throw EntityNotFoundException()
+        val user = userService.getById(authorizationUser.id) ?: throw ModelNotFoundException()
         if (!matchesPassword(request.old, user.password)) {
             throw RuntimeException("密码错误")
         }

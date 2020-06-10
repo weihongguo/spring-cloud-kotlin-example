@@ -1,10 +1,10 @@
 package com.example.account.controller
 
 import com.example.account.service.UserService
+import com.example.base.FilterRequest
 import com.example.base.Response
 import com.example.base.okResponse
-import com.example.database.FilterRequest
-import com.example.database.pageResponse
+import com.example.base.pageResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*

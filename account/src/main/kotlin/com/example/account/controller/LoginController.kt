@@ -7,8 +7,8 @@ import com.example.account.security.generateJwt
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
+import com.example.base.model.ModelNotFoundException
 import com.example.base.okResponse
-import com.example.database.entity.EntityNotFoundException
 import com.example.security.AuthorizationUserType
 import com.example.security.matchesPassword
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +29,7 @@ class LoginController {
         if (!request.check()) {
             throw RequestException()
         }
-        val user = userService.getByMobile(request.mobile) ?: throw EntityNotFoundException("用户不存在")
+        val user = userService.getByMobile(request.mobile) ?: throw ModelNotFoundException("用户不存在")
         if (!matchesPassword(request.password, user.password)) {
             throw RuntimeException("密码错误")
         }

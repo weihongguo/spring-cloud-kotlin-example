@@ -3,7 +3,7 @@ package com.example.account.service
 import com.example.account.request.InitRequest
 import com.example.account.request.RegisterRequest
 import com.example.base.RequestException
-import com.example.database.entity.*
+import com.example.base.model.*
 import com.example.security.encodePassword
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -39,7 +39,7 @@ class InitServiceImpl : InitService {
 
     private fun initAdmin(request: RegisterRequest) {
         userService.getByMobile(request.mobile)?.let {
-            throw EntityExistedException()
+            throw ModelExistedException()
         }
         val permissions = initAdminPermission()
         val role = initRole(RoleTypeEnum.USER, "管理用户", permissions)
@@ -48,7 +48,7 @@ class InitServiceImpl : InitService {
 
     private fun initNorman(request: RegisterRequest) {
         userService.getByMobile(request.mobile)?.let {
-            throw EntityExistedException()
+            throw ModelExistedException()
         }
         val permissions = initNormalPermission()
         val role = initRole(RoleTypeEnum.USER, "普通用户", permissions)

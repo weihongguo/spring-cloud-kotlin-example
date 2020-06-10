@@ -7,9 +7,9 @@ import com.example.account.security.generateJwt
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
+import com.example.base.model.ModelExistedException
+import com.example.base.model.User
 import com.example.base.okResponse
-import com.example.database.entity.EntityExistedException
-import com.example.database.entity.User
 import com.example.security.AuthorizationUserType
 import com.example.security.encodePassword
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,7 +31,7 @@ class RegisterController {
             throw RequestException()
         }
         userService.getByMobile(request.mobile)?.let {
-            throw EntityExistedException("用户已经存在")
+            throw ModelExistedException("用户已经存在")
         }
         val user = User(mobile = request.mobile, password = encodePassword(request.password))
         val saveUser = userService.save(user)

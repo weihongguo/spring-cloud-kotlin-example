@@ -6,7 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 
 @EnableDiscoveryClient
-@EntityScan(basePackages = ["com.example.database.entity"])
+@EntityScan(basePackages = ["com.example.base.model"])
 @SpringBootApplication
 class AccountApplication
 

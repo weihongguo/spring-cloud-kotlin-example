@@ -1,11 +1,11 @@
 package com.example.account.service
 
-import com.example.database.entity.Permission
-import com.example.database.service.BaseRepository
-import com.example.database.service.BaseService
-import com.example.database.service.BaseServiceImpl
-import com.example.database.entity.Role
-import com.example.database.entity.RolePermission
+import com.example.base.model.Permission
+import com.example.base.model.Role
+import com.example.base.model.RolePermission
+import com.example.base.service.BaseRepository
+import com.example.base.service.BaseService
+import com.example.base.service.BaseServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
