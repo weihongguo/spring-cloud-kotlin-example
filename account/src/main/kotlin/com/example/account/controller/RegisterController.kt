@@ -7,8 +7,8 @@ import com.example.account.security.generateJwt
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
-import com.example.base.model.ModelExistedException
-import com.example.base.model.User
+import com.example.base.account.User
+import com.example.base.ModelExistedException
 import com.example.base.okResponse
 import com.example.security.AuthorizationUserType
 import com.example.security.encodePassword

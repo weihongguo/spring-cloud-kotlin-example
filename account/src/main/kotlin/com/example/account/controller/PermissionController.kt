@@ -3,7 +3,7 @@ package com.example.account.controller
 import com.example.account.service.PermissionService
 import com.example.base.FilterRequest
 import com.example.base.Response
-import com.example.base.model.Permission
+import com.example.base.account.Permission
 import com.example.base.okResponse
 import com.example.base.pageResponse
 import org.springframework.beans.factory.annotation.Autowired

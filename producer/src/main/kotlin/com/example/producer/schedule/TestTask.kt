@@ -1,8 +1,8 @@
 package com.example.producer.schedule
 
-import com.example.database.service.ScheduleJobService
-import com.example.database.service.ScheduleLogService
-import com.example.database.entity.ScheduleResultEnum
+import com.example.base.schedule.ScheduleJobService
+import com.example.base.schedule.ScheduleLogService
+import com.example.base.schedule.ScheduleResultEnum
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled

@@ -1,11 +1,11 @@
 package com.example.account.service
 
 import com.example.account.security.JwtUser
-import com.example.base.model.User
-import com.example.base.model.UserRole
-import com.example.base.service.BaseRepository
-import com.example.base.service.BaseService
-import com.example.base.service.BaseServiceImpl
+import com.example.base.account.User
+import com.example.base.account.UserRole
+import com.example.base.BaseRepository
+import com.example.base.BaseService
+import com.example.base.BaseServiceImpl
 import com.example.security.AuthorizationUserType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository

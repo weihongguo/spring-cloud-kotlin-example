@@ -3,7 +3,7 @@ package com.example.security
 import com.example.base.Response
 import com.example.base.errorResponse
 import com.example.base.forbiddenResponse
-import com.example.base.model.ModelNotFoundException
+import com.example.base.ModelNotFoundException
 import com.example.base.notFoundResponse
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.bind.annotation.ExceptionHandler

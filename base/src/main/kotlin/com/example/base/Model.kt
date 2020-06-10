@@ -1,9 +1,9 @@
-package com.example.base.model
+package com.example.base
 
-import org.springframework.data.annotation.Id
 import java.util.*
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
+import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 /**
@@ -18,7 +18,7 @@ class ModelExistedException(message: String? = null) : RuntimeException(message 
 class ModelOperateException(message: String? = null) : RuntimeException(message ?: "资源操作错误")
 
 @MappedSuperclass
-abstract class Model(
+abstract class BaseModel(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

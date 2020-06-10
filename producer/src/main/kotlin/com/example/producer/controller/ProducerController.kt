@@ -1,10 +1,10 @@
 package com.example.producer.controller
 
+import com.example.base.FilterRequest
 import com.example.base.Response
 import com.example.base.okResponse
-import com.example.database.FilterRequest
-import com.example.database.entity.Producer
-import com.example.database.pageResponse
+import com.example.base.pageResponse
+import com.example.base.producer.Producer
 import com.example.producer.service.ProducerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize

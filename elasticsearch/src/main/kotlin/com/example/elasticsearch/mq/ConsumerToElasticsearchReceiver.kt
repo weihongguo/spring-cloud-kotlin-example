@@ -1,11 +1,10 @@
 package com.example.elasticsearch.mq
 
 import com.alibaba.fastjson.JSON
-import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
-import com.example.base.getResponseData
-import com.example.database.entity.Consumer
-import com.example.database.entity.Producer
-import com.example.database.service.EntityMessage
+import com.example.base.consumer.Consumer
+import com.example.base.mq.EntityMessage
+import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
+import com.example.base.producer.Producer
 import com.example.elasticsearch.document.ConsumerDocument
 import com.example.elasticsearch.service.ConsumerDocumentRepository
 import com.example.elasticsearch.service.ConsumerRpcService
@@ -36,8 +35,8 @@ class ConsumerToElasticsearchReceiver {
             if (entityMessage.entityType == "consumer" && entityMessage.entityId > 0) {
                 val response = consumerRpcService.consumerShow(entityMessage.entityId, it)
                 log.info("rpc receive $response")
-                val consumer = getResponseData(response, "consumer", Consumer::class.java)
-                val producer = getResponseData(response, "producer", Producer::class.java)
+                val consumer = response.getData("consumer", Consumer::class.java)
+                val producer = response.getData("producer", Producer::class.java)
                 if (consumer != null && producer != null) {
                     val consumerDocument = ConsumerDocument(consumer = consumer, producer = producer)
                     consumerDocumentRepository.save(consumerDocument)

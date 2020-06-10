@@ -1,13 +1,13 @@
 package com.example.consumer.controller
 
 import com.example.base.Response
-import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
-import com.example.base.config.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
+import com.example.base.mq.CustomMessage
+import com.example.base.mq.EntityMessage
+import com.example.base.mq.EntityMessageOperateEnum
+import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
+import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_PRODUCER
+import com.example.base.mq.MessageQueueService
 import com.example.base.okResponse
-import com.example.database.service.CustomMessage
-import com.example.database.service.EntityMessage
-import com.example.database.service.EntityMessageOperateEnum
-import com.example.database.service.MqService
 import com.example.security.getSecurityAuthorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 class MqController {
 
     @Autowired
-    lateinit var mqService: MqService
+    lateinit var mqService: MessageQueueService
 
     @GetMapping("consumer_to_producer")
     fun consumerToProducer(): Response {

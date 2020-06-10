@@ -4,7 +4,7 @@ import com.example.account.request.PasswordUpdateRequest
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
-import com.example.base.model.ModelNotFoundException
+import com.example.base.ModelNotFoundException
 import com.example.base.okResponse
 import com.example.security.encodePassword
 import com.example.security.getSecurityAuthorizationUser

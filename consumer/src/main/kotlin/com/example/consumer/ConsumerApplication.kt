@@ -7,12 +7,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
-//@EnableScheduling
-@EnableFeignClients
 @EnableDiscoveryClient
-@EntityScan(basePackages = ["com.example.base.model"])
-@EnableJpaRepositories(basePackages = ["com.example.consumer.service", "com.example.base.service"])
-@SpringBootApplication(scanBasePackages = ["com.example.consumer", "com.example.base.config", "com.example.base.service"])
+@EntityScan(basePackages = ["com.example.base.consumer", "com.example.base.mq", "com.example.base.schedule"])
+@EnableJpaRepositories(basePackages = ["com.example.consumer.service", "com.example.base.consumer", "com.example.base.mq", "com.example.base.schedule"])
+@SpringBootApplication(scanBasePackages = ["com.example.consumer", "com.example.base.mq", "com.example.base.schedule", "com.example.base.feign"])
 class ConsumerApplication
 
 fun main(args: Array<String>) {

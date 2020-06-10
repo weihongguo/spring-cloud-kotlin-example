@@ -1,7 +1,7 @@
 package com.example.security
 
-import com.example.base.model.Permission
-import com.example.base.model.PermissionMethodEnum
+import com.example.base.account.Permission
+import com.example.base.account.PermissionMethodEnum
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.PermissionEvaluator

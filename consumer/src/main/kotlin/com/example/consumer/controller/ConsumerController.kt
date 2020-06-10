@@ -1,18 +1,17 @@
 package com.example.consumer.controller
 
+import com.example.base.FilterRequest
 import com.example.base.Response
-import com.example.base.getResponseData
+import com.example.base.consumer.Consumer
 import com.example.base.okResponse
+import com.example.base.pageResponse
+import com.example.base.producer.Producer
 import com.example.consumer.service.ConsumerService
 import com.example.consumer.service.ProducerRpcService
-import com.example.database.FilterRequest
-import com.example.database.entity.Consumer
-import com.example.database.entity.EntityNotFoundException
-import com.example.database.entity.Producer
-import com.example.database.pageResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import javax.persistence.EntityNotFoundException
 
 /**
  * @Author：GuoGuo
@@ -52,7 +51,7 @@ class ConsumerController {
     fun show(@PathVariable id: Long): Response {
         val consumer = consumerService.getById(id) ?: throw EntityNotFoundException()
         val rpcResponse = producerRpcService.producerShow(consumer.producerId)
-        val producer = getResponseData(rpcResponse, "producer", Producer::class.java)
+        val producer = rpcResponse.getData("producer", Producer::class.java)
         return okResponse(mapOf(
             "consumer" to consumer,
             "producer" to producer

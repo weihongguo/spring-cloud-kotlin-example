@@ -1,9 +1,5 @@
-package com.example.base.service
+package com.example.base
 
-import com.example.base.FilterConfig
-import com.example.base.FilterRequest
-import com.example.base.model.Model
-import com.example.base.model.ModelOperateException
 import org.springframework.data.domain.Page
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -12,15 +8,14 @@ import org.springframework.data.repository.Repository
 import java.util.*
 import javax.persistence.EntityNotFoundException
 
-interface BaseReadService<T : Model> {
+interface BaseReadService<T : BaseModel> {
     fun getRepository(): BaseReadRepository<T>
 
     fun getById(id: Long): T?
     fun listByIdIn(ids: Set<Long>): List<T>?
 }
 
-abstract class BaseReadServiceImpl<T : Model> :
-    BaseReadService<T> {
+abstract class BaseReadServiceImpl<T : BaseModel> : BaseReadService<T> {
 
     override fun getById(id: Long): T? {
         if (id < 0) {
@@ -42,14 +37,14 @@ abstract class BaseReadServiceImpl<T : Model> :
 }
 
 @NoRepositoryBean
-interface BaseReadRepository<T : Model> : Repository<T, Long>, JpaSpecificationExecutor<T> {
+interface BaseReadRepository<T : BaseModel> : Repository<T, Long>, JpaSpecificationExecutor<T> {
     fun findById(id: Long): T?
     fun findByIdIn(ids: Set<Long>): List<T>?
 }
 
 /* */
 
-interface BaseService<T : Model> {
+interface BaseService<T : BaseModel> {
     fun getRepository(): BaseRepository<T>
 
     fun getFilterConfig(): FilterConfig?
@@ -69,7 +64,7 @@ interface BaseService<T : Model> {
     fun destroy(id: Long)
 }
 
-abstract class BaseServiceImpl<T : Model> : BaseService<T> {
+abstract class BaseServiceImpl<T : BaseModel> : BaseService<T> {
 
     override fun getFilterConfig(): FilterConfig? {
         return null
@@ -185,4 +180,4 @@ abstract class BaseServiceImpl<T : Model> : BaseService<T> {
 }
 
 @NoRepositoryBean
-interface BaseRepository<T : Model> : JpaRepository<T, Long>, JpaSpecificationExecutor<T>
+interface BaseRepository<T : BaseModel> : JpaRepository<T, Long>, JpaSpecificationExecutor<T>

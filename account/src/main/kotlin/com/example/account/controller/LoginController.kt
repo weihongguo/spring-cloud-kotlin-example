@@ -7,7 +7,7 @@ import com.example.account.security.generateJwt
 import com.example.account.service.UserService
 import com.example.base.RequestException
 import com.example.base.Response
-import com.example.base.model.ModelNotFoundException
+import com.example.base.ModelNotFoundException
 import com.example.base.okResponse
 import com.example.security.AuthorizationUserType
 import com.example.security.matchesPassword

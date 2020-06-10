@@ -1,9 +1,9 @@
 package com.example.producer.service
 
-import com.example.database.service.BaseRepository
-import com.example.database.service.BaseService
-import com.example.database.service.BaseServiceImpl
-import com.example.database.entity.Producer
+import com.example.base.producer.Producer
+import com.example.base.BaseRepository
+import com.example.base.BaseService
+import com.example.base.BaseServiceImpl
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheEvict

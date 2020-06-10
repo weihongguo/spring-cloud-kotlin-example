@@ -8,13 +8,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
-//@EnableScheduling
-@EnableCaching
-@EnableFeignClients
 @EnableDiscoveryClient
-@EntityScan(basePackages = ["com.example.base.entity"])
-@EnableJpaRepositories(basePackages = ["com.example.producer.service", "com.example.base.service"])
-@SpringBootApplication(scanBasePackages = ["com.example.producer.**", "com.example.base.config", "com.example.base.service"])
+@EntityScan(basePackages = ["com.example.base.producer", "com.example.base.mq", "com.example.base.schedule"])
+@EnableJpaRepositories(basePackages = ["com.example.producer.service", "com.example.base.producer", "com.example.base.mq", "com.example.base.schedule"])
+@SpringBootApplication(scanBasePackages = ["com.example.producer", "com.example.base.producer", "com.example.base.mq", "com.example.base.schedule", "com.example.base.feign", "com.example.base.cache"])
 class ProducerApplication
 
 fun main(args: Array<String>) {

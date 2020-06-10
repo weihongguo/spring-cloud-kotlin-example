@@ -1,6 +1,5 @@
 package com.example.base
 
-import com.example.base.model.Model
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.domain.Page
 import javax.servlet.http.HttpServletResponse
@@ -47,7 +46,7 @@ fun notFoundResponse(message: String, data: Map<String, *>? = null): Response {
 
 data class Pagination(var pageIndex: Int, var pageSize: Int, var totalElements: Long, var totalPages: Int)
 
-fun<T: Model> pageResponse(page: Page<T>, key: String? = null, extraData: Map<String, *>? = null): Response {
+fun<T: BaseModel> pageResponse(page: Page<T>, key: String? = null, extraData: Map<String, *>? = null): Response {
     val list = page.content
     val pagination = Pagination(pageIndex = page.pageable.pageNumber + 1, pageSize = page.pageable.pageSize, totalElements = page.totalElements, totalPages = page.totalPages)
     val pageData = mapOf(

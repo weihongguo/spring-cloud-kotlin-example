@@ -1,7 +1,6 @@
 package com.example.consumer.security
 
 import com.example.base.JwtAuthorizationRequest
-import com.example.base.getResponseData
 import com.example.consumer.service.AccountRpcService
 import com.example.security.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,7 +31,7 @@ class AccountRpcAuthorizationServiceImpl : AuthorizationService {
     override fun getByJwt(jwt: String): Authorization? {
         val request = JwtAuthorizationRequest(jwt, "consumer")
         val response = accountRpcService.authorization(request)
-        return getResponseData(response, "authorization", Authorization::class.java)
+        return response.getData("authorization", Authorization::class.java)
     }
 }
 

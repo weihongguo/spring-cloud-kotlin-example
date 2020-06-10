@@ -1,7 +1,7 @@
 package com.example.elasticsearch.service
 
 import com.example.base.Response
-import com.example.base.config.FeignConfig
+import com.example.base.feign.FeignConfig
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

@@ -2,7 +2,7 @@ package com.example.producer.service
 
 import com.example.base.JwtAuthorizationRequest
 import com.example.base.Response
-import com.example.base.config.FeignConfig
+import com.example.base.feign.FeignConfig
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
