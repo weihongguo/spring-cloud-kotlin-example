@@ -12,7 +12,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
-import java.net.URLEncoder
 
 /**
  * @Author：GuoGuo
@@ -24,7 +23,7 @@ data class CustomMessage (
     var content: String,
     var authorization: String? = null
 ) {
-    fun uuid(): String = "${queue}?content=${URLEncoder.encode(content, "utf-8")}&time=${System.currentTimeMillis()}"
+    fun uuid(): String = "${queue}?content=$content&time=${System.currentTimeMillis()}"
 
     override fun toString(): String {
         return "CustomMessage [queue=$queue content=$content authorization=$authorization]"
@@ -39,10 +38,10 @@ data class EntityMessage (
     var authorization: String? = null
 ) {
 
-    fun uuid(): String = "${queue}?entityType=${entityType}&entityId=${entityId}&operate=${operate}"
+    fun uuid(): String = "${queue}?entityType=${entityType}&entityId=${entityId}&operate=${operate}&time=${System.currentTimeMillis()}"
 
     override fun toString(): String {
-        return "EntityMessage [queue=$queue entityType=$entityType entityId=$entityId operate=$operate authorization= $authorization]"
+        return "EntityMessage [queue=$queue entityType=$entityType entityId=$entityId operate=$operate authorization=$authorization]"
     }
 }
 
@@ -98,7 +97,7 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
     override fun confirm(correlationData: CorrelationData?, ack: Boolean, cause: String?) {
         if (!ack) {
             val correlationId = correlationData?.id
-            val reason = cause ?: "undefined"
+            val reason = cause ?: "unknown"
             val mqFailLog = MqFailLog(
                 correlationId = correlationId,
                 operate = MqFailLogOperateEnum.CONFIRM.value,
@@ -106,11 +105,11 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
             )
             mqFailLogService.save(mqFailLog)
         }
-        log.info("### confirm $ack $cause ${correlationData?.id} ###")
+        log.info("### message queue confirm $correlationData ack=$ack cause=$cause ###")
     }
 
     override fun returnedMessage(message: Message, replyCode: Int, replyText: String, exchange: String, routingKey: String) {
-        val reason = "$replyCode#:#$replyText#:#$exchange#:#$routingKey"
+        val reason = "returnedMessage [replyCode=$replyCode replyText=$replyText exchange=$exchange routingKey=$routingKey]"
         val mqFailLog = MqFailLog(
             message = String(message.body),
             operate = MqFailLogOperateEnum.RETURNED_MESSAGE.value,

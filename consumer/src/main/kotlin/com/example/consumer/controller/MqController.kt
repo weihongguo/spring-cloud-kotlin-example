@@ -35,7 +35,7 @@ class MqController {
         mqService.send(customMessage)
         val entityMessage = EntityMessage(
             queue = MQ_CONSUMER_TO_PRODUCER,
-            entityType = "producer",
+            entityType = "consumer",
             entityId = 1,
             operate = EntityMessageOperateEnum.CREATE.value
         )

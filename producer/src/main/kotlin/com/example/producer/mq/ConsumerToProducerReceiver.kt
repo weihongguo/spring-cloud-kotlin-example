@@ -20,11 +20,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class ConsumerToProducerReceiver {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     companion object {
         const val QUEUE = MQ_CONSUMER_TO_PRODUCER
     }
-
-    private val log = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     lateinit var mqFailLogService: MqFailLogService
@@ -35,38 +35,24 @@ class ConsumerToProducerReceiver {
 
         try {
             val entityMessage = JSON.parseObject<EntityMessage>(message.body, EntityMessage::class.java)
-            log.info("receive $entityMessage")
+
             /* 模拟错误处理 */
-            if (entityMessage.entityType != "producer") {
-                val reason = "entity type error"
-                val mqFailLog = MqFailLog(
-                    queue = QUEUE,
-                    message = String(message.body),
-                    operate = MqFailLogOperateEnum.PROCESS.value,
-                    reason = reason
-                )
-                mqFailLogService.save(mqFailLog)
-                return
+            if (entityMessage.entityType != "consumer") {
+                val reason = "entity type error [${entityMessage.entityType} != consumer]"
+                throw RuntimeException(reason)
+            }
+            if (entityMessage.entityId <= 0) {
+                val reason = "entity id error [${entityMessage.entityId} <= 0]"
+                throw RuntimeException(reason)
             }
 
-            if (entityMessage.entityId <= 0) {
-                val reason = "entity id error"
-                val mqFailLog = MqFailLog(
-                    queue = QUEUE,
-                    message = String(message.body),
-                    operate = MqFailLogOperateEnum.PROCESS.value,
-                    reason = reason
-                )
-                mqFailLogService.save(mqFailLog)
-                return
-            }
+            log.info("ConsumerToProducerReceiver deal success $entityMessage")
         } catch (e: Exception) {
-            val reason = e.toString()
             val mqFailLog = MqFailLog(
                 queue = QUEUE,
                 message = String(message.body),
                 operate = MqFailLogOperateEnum.PROCESS.value,
-                reason = reason
+                reason = e.toString()
             )
             mqFailLogService.save(mqFailLog)
         }
