@@ -5,8 +5,8 @@ import com.example.base.JwtAuthorizationRequest
 import com.example.base.RequestException
 import com.example.base.Response
 import com.example.base.okResponse
-import com.example.security.getSecurityAuthorizationToken
-import com.example.security.getSecurityAuthorizationUser
+import com.example.base.security.getSecurityAuthorizationToken
+import com.example.base.security.getSecurityAuthorizationUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

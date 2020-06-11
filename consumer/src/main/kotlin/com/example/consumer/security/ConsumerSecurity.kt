@@ -1,8 +1,8 @@
 package com.example.consumer.security
 
 import com.example.base.JwtAuthorizationRequest
+import com.example.base.security.*
 import com.example.consumer.service.AccountRpcService
-import com.example.security.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity

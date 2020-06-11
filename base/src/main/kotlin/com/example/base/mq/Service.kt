@@ -48,7 +48,7 @@ enum class EntityMessageOperateEnum (var value: String, var label: String) {
 }
 
 @Service
-final class MessageQueueService(private var rabbitTemplate: RabbitTemplate): RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
+final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
     private val log = LoggerFactory.getLogger(javaClass)
 
     init {
@@ -57,7 +57,7 @@ final class MessageQueueService(private var rabbitTemplate: RabbitTemplate): Rab
     }
 
     @Autowired
-    lateinit var mqFailLogService: MessageQueueFailLogService
+    lateinit var mqFailLogService: MqFailLogService
 
     fun send(queue: String, content: String, authorization: String? = null) {
         val customMessage = CustomMessage(
@@ -105,46 +105,46 @@ final class MessageQueueService(private var rabbitTemplate: RabbitTemplate): Rab
     }
 }
 
-interface MessageQueueFailLogService : BaseService<MessageQueueFailLog> {
+interface MqFailLogService : BaseService<MqFailLog> {
     fun confirmFail(correlationId: String, reason: String)
     fun returnMessageFail(correlationId: String, message: String, reason: String)
     fun processFail(queue: String, message: String, reason: String)
 }
 
 @Service
-class MessageQueueFailLogServiceImpl : BaseServiceImpl<MessageQueueFailLog>(), MessageQueueFailLogService {
+class MqFailLogServiceImpl : BaseServiceImpl<MqFailLog>(), MqFailLogService {
 
     @Autowired
     lateinit var mqFailLogRepository: MessageQueueFailLogRepository
 
-    override fun getRepository(): BaseRepository<MessageQueueFailLog> {
+    override fun getRepository(): BaseRepository<MqFailLog> {
         return mqFailLogRepository
     }
 
     override fun confirmFail(correlationId: String, reason: String) {
-        val mqFailLog = MessageQueueFailLog(
+        val mqFailLog = MqFailLog(
                 correlationId = correlationId,
-                operate = MessageQueueFailLogOperateEnum.CONFIRM.value,
+                operate = MqFailLogOperateEnum.CONFIRM.value,
                 reason = reason
         )
         this.save(mqFailLog)
     }
 
     override fun returnMessageFail(correlationId: String, message: String, reason: String) {
-        val mqFailLog = MessageQueueFailLog(
+        val mqFailLog = MqFailLog(
                 correlationId = correlationId,
                 message = message,
-                operate = MessageQueueFailLogOperateEnum.RETURNED_MESSAGE.value,
+                operate = MqFailLogOperateEnum.RETURNED_MESSAGE.value,
                 reason = reason
         )
         this.save(mqFailLog)
     }
 
     override fun processFail(queue: String, message: String, reason: String) {
-        val mqFailLog = MessageQueueFailLog(
+        val mqFailLog = MqFailLog(
                 queue = queue,
                 message = message,
-                operate = MessageQueueFailLogOperateEnum.PROCESS.value,
+                operate = MqFailLogOperateEnum.PROCESS.value,
                 reason = reason
         )
         this.save(mqFailLog)
@@ -152,4 +152,4 @@ class MessageQueueFailLogServiceImpl : BaseServiceImpl<MessageQueueFailLog>(), M
 }
 
 @Repository
-interface MessageQueueFailLogRepository : BaseRepository<MessageQueueFailLog>
+interface MessageQueueFailLogRepository : BaseRepository<MqFailLog>

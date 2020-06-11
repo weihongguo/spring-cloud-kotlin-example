@@ -6,7 +6,7 @@ import com.example.base.account.UserRole
 import com.example.base.BaseRepository
 import com.example.base.BaseService
 import com.example.base.BaseServiceImpl
-import com.example.security.AuthorizationUserType
+import com.example.base.security.AuthorizationUserType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service

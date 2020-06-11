@@ -2,8 +2,8 @@ package com.example.producer.mq
 
 import com.alibaba.fastjson.JSON
 import com.example.base.mq.EntityMessage
-import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_PRODUCER
-import com.example.base.mq.MessageQueueFailLogService
+import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
+import com.example.base.mq.MqFailLogService
 import com.rabbitmq.client.Channel
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
@@ -25,7 +25,7 @@ class ConsumerToProducerReceiver {
     }
 
     @Autowired
-    lateinit var mqFailLogService: MessageQueueFailLogService
+    lateinit var mqFailLogService: MqFailLogService
 
     @RabbitListener(queues = [QUEUE])
     fun process(channel: Channel, message: Message) {

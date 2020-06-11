@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @EnableDiscoveryClient
 @EntityScan(basePackages = ["com.example.base.account"])
-@EnableJpaRepositories(basePackages = ["com.example.account.service"])
+@EnableJpaRepositories(basePackages = ["com.example.account"])
 @SpringBootApplication(scanBasePackages = ["com.example.account"])
 class AccountApplication
 

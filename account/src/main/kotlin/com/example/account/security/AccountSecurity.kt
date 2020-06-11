@@ -2,7 +2,7 @@ package com.example.account.security
 
 import com.example.account.service.PermissionService
 import com.example.account.service.UserService
-import com.example.security.*
+import com.example.base.security.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration

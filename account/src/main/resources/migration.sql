@@ -1,4 +1,6 @@
 
+# account
+
 drop table if exists user;
 
 create table if not exists user (
@@ -102,11 +104,11 @@ create table if not exists schedule_log (
     index idx_schedule_job (schedule_job_id)
 );
 
-# message_queue
+# message queue
 
-drop table if exists message_queue_fail_log;
+drop table if exists mq_fail_log;
 
-create table if not exists message_queue_fail_log (
+create table if not exists mq_fail_log (
     id bigint not null auto_increment,
     create_time timestamp null,
     update_time timestamp null,

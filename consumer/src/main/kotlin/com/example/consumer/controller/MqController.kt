@@ -4,11 +4,11 @@ import com.example.base.Response
 import com.example.base.mq.CustomMessage
 import com.example.base.mq.EntityMessage
 import com.example.base.mq.EntityMessageOperateEnum
-import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
-import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_PRODUCER
-import com.example.base.mq.MessageQueueService
+import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
+import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
+import com.example.base.mq.MqService
 import com.example.base.okResponse
-import com.example.security.getSecurityAuthorization
+import com.example.base.security.getSecurityAuthorization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 class MqController {
 
     @Autowired
-    lateinit var mqService: MessageQueueService
+    lateinit var mqService: MqService
 
     @GetMapping("consumer_to_producer")
     fun consumerToProducer(): Response {

@@ -2,10 +2,10 @@ package com.example.account.service
 
 import com.example.account.request.InitRequest
 import com.example.account.request.RegisterRequest
+import com.example.base.ModelExistedException
 import com.example.base.RequestException
 import com.example.base.account.*
-import com.example.base.ModelExistedException
-import com.example.security.encodePassword
+import com.example.base.security.encodePassword
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

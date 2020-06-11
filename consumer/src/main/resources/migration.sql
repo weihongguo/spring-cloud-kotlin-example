@@ -1,4 +1,6 @@
 
+# consumer
+
 drop table if exists consumer;
 
 create table if not exists consumer (
@@ -48,7 +50,7 @@ create table if not exists schedule_log (
     index idx_schedule_job (schedule_job_id)
 );
 
-# mq_fail_log
+# message queue
 
 drop table if exists mq_fail_log;
 

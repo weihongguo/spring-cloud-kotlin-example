@@ -2,13 +2,13 @@ package com.example.account.controller
 
 import com.example.account.request.PasswordUpdateRequest
 import com.example.account.service.UserService
+import com.example.base.ModelNotFoundException
 import com.example.base.RequestException
 import com.example.base.Response
-import com.example.base.ModelNotFoundException
 import com.example.base.okResponse
-import com.example.security.encodePassword
-import com.example.security.getSecurityAuthorizationUser
-import com.example.security.matchesPassword
+import com.example.base.security.encodePassword
+import com.example.base.security.getSecurityAuthorizationUser
+import com.example.base.security.matchesPassword
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody

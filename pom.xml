@@ -24,8 +24,6 @@
 		<module>config</module>
 		<module>gateway</module>
 		<module>base</module>
-		<module>database</module>
-		<module>security</module>
 		<module>account</module>
 		<module>producer</module>
 		<module>consumer</module>

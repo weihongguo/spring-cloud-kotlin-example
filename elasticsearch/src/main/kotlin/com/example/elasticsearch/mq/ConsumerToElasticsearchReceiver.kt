@@ -3,7 +3,7 @@ package com.example.elasticsearch.mq
 import com.alibaba.fastjson.JSON
 import com.example.base.consumer.Consumer
 import com.example.base.mq.EntityMessage
-import com.example.base.mq.MessageQueueConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
+import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
 import com.example.base.producer.Producer
 import com.example.elasticsearch.document.ConsumerDocument
 import com.example.elasticsearch.service.ConsumerDocumentRepository
@@ -39,7 +39,7 @@ class ConsumerToElasticsearchReceiver {
                 val producer = response.getData("producer", Producer::class.java)
                 if (consumer != null && producer != null) {
                     val consumerDocument = ConsumerDocument(consumer = consumer, producer = producer)
-                    consumerDocumentRepository.save(consumerDocument)
+                    // consumerDocumentRepository.save(consumerDocument)
                     log.info("save $consumerDocument")
                 }
             }
