@@ -1,6 +1,7 @@
 package com.example.base.schedule
 
 import com.example.base.BaseRepository
+import com.example.base.BaseService
 import com.example.base.BaseServiceImpl
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 
-interface ScheduleJobService {
-    fun canRun(module: String, name: String, lockDuration: Long, lockBy: String): ScheduleJob?
+interface ScheduleJobService : BaseService<ScheduleJob> {
+    fun canRun(name: String, lockDuration: Long, lockBy: String): ScheduleJob?
 }
 
 @Service
@@ -27,15 +28,15 @@ class ScheduleJobServiceImpl : BaseServiceImpl<ScheduleJob>(), ScheduleJobServic
         return scheduleJobRepository
     }
 
-    override fun canRun(module: String, name: String, lockDuration: Long, lockBy: String): ScheduleJob? {
-        val scheduleJob = scheduleJobRepository.findByModuleAndName(module, name)
+    override fun canRun(name: String, lockDuration: Long, lockBy: String): ScheduleJob? {
+        val scheduleJob = scheduleJobRepository.findByName(name)
         scheduleJob?.let {
             val now = Date()
             if (it.lockUntil == null) {
                 it.lockTime = now
                 it.lockUntil = Date(now.time + lockDuration)
                 it.lockBy = lockBy
-                if (scheduleJobRepository.lockByModuleAndName(it) != 1) {
+                if (scheduleJobRepository.lockByName(it) != 1) {
                     return null
                 }
             } else {
@@ -48,20 +49,20 @@ class ScheduleJobServiceImpl : BaseServiceImpl<ScheduleJob>(), ScheduleJobServic
                 it.lockTime = now
                 it.lockUntil = Date(now.time + lockDuration)
                 it.lockBy = lockBy
-                if (scheduleJobRepository.lockByModuleAndName(it, oldLockTime, oldLockUntil, oldLockBy) != 1) {
+                if (scheduleJobRepository.lockByName(it, oldLockTime, oldLockUntil, oldLockBy) != 1) {
                     return null
                 }
             }
             return scheduleJob
         }
-        log.error("Can not find schedule jog ${module}:${name}")
+        log.error("Can not find schedule jog $name")
         return null
     }
 }
 
 @Repository
 interface ScheduleJobRepository : BaseRepository<ScheduleJob> {
-    fun findByModuleAndName(mobile: String, name: String): ScheduleJob?
+    fun findByName(name: String): ScheduleJob?
 
     @Modifying
     @Transactional(rollbackFor = [Exception::class])
@@ -71,13 +72,12 @@ interface ScheduleJobRepository : BaseRepository<ScheduleJob> {
                     ",lockTime = :#{#scheduleJob.lockTime}" +
                     ",lockUntil = :#{#scheduleJob.lockUntil}" +
                     ",lockBy = :#{#scheduleJob.lockBy}" +
-                    " where module = :#{#scheduleJob.module}" +
-                    " and name = :#{#scheduleJob.name}" +
+                    " where name = :#{#scheduleJob.name}" +
                     " and lockTime is null" +
                     " and lockUntil is null" +
                     " and lockBy is null"
     )
-    fun lockByModuleAndName(scheduleJob: ScheduleJob): Int
+    fun lockByName(scheduleJob: ScheduleJob): Int
 
     @Modifying
     @Transactional(rollbackFor = [Exception::class])
@@ -87,16 +87,15 @@ interface ScheduleJobRepository : BaseRepository<ScheduleJob> {
                     ",lockTime = :#{#scheduleJob.lockTime}" +
                     ",lockUntil = :#{#scheduleJob.lockUntil}" +
                     ",lockBy = :#{#scheduleJob.lockBy}" +
-                    " where module = :#{#scheduleJob.module}" +
-                    " and name = :#{#scheduleJob.name}" +
+                    " where name = :#{#scheduleJob.name}" +
                     " and lockTime = :oldLockTime" +
                     " and lockUntil = :oldLockUntil" +
                     " and lockBy = :oldLockBy"
     )
-    fun lockByModuleAndName(scheduleJob: ScheduleJob, oldLockTime: Date, oldLockUntil: Date, oldLockBy: String): Int
+    fun lockByName(scheduleJob: ScheduleJob, oldLockTime: Date, oldLockUntil: Date, oldLockBy: String): Int
 }
 
-interface ScheduleLogService {
+interface ScheduleLogService : BaseService<ScheduleLog> {
     fun record(
             scheduleJob: ScheduleJob,
             startTime: Date,

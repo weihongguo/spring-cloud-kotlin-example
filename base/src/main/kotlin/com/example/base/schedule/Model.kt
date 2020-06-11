@@ -7,8 +7,8 @@ import javax.persistence.Entity
 
 @Entity
 data class ScheduleJob (
-        var module: String = "",
         var name: String = "",
+        var digest: String = "",
         var lockTime: Date? = null,
         var lockUntil: Date? = null,
         var lockBy: String? = null

@@ -25,7 +25,7 @@ class TestTask {
 
     @Scheduled(cron = "0/10 * * * * ?")
     fun process() {
-        val scheduleJob = scheduleJobService.canRun("schedule", "test", 3L * 1000, "consumer")
+        val scheduleJob = scheduleJobService.canRun("test", 3L * 1000, "consumer")
         scheduleJob?.let {
             val startTime = Date()
             log.info("TestTask process start")
