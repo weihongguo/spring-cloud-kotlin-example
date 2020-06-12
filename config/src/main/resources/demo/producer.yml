@@ -38,4 +38,5 @@ spring:
         acknowledge-mode: manual
 
 schedule:
-  thread: 2
+  thread:
+    count: 2
