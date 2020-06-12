@@ -17,7 +17,7 @@ class ScheduleConfig : SchedulingConfigurer {
 
     override fun configureTasks(registrar: ScheduledTaskRegistrar) {
         val threadFactory = ThreadFactory { runnable ->
-            Thread(runnable, "schedule-${++tag}")
+            Thread(runnable, "schedule-${tag++}")
         }
         val threadPoolExecutor = ScheduledThreadPoolExecutor(count, threadFactory)
         registrar.setScheduler(threadPoolExecutor)
