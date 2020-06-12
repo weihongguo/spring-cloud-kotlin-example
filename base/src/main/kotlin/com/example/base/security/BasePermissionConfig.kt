@@ -50,7 +50,7 @@ class BasePermissionEvaluator(private var antPathMatcher: AntPathMatcher) : Perm
     }
 }
 
-class PermissionAuthority(private var permission: Permission? = null) : GrantedAuthority {
+data class PermissionAuthority(var permission: Permission? = null) : GrantedAuthority {
     private val log = LoggerFactory.getLogger(javaClass)
 
     @JsonIgnore

@@ -10,7 +10,7 @@ data class MqLog (
         var message: String? = null,
         var operate: String = "",
         var result: String = "",
-        var reason: String = ""
+        var resultInfo: String = ""
 ) : BaseModel()
 
 enum class MqLogResultEnum (var value: String, var label: String) {

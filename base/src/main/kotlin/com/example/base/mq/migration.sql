@@ -13,7 +13,7 @@ create table if not exists mq_log (
     message varchar(255) null,
     operate char(16) not null,
     result char(16) not null,
-    reason char(255) not null,
+    result_info char(255) not null,
     primary key (id),
     index idx_queue (queue)
 );

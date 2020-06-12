@@ -1,0 +1,30 @@
+server:
+  port: 5001
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - name: Authorization
+          args:
+            pass-paths: /api/account/init;/api/account/login;/api/account/register
+        - name: TimeLog
+          args:
+            threshold: 300
+      routes:
+        - id: ACCOUNT
+          uri: lb://ACCOUNT
+          predicates:
+            - Path=/api/account/**
+        - id: PRODUCER
+          uri: lb://PRODUCER
+          predicates:
+            - Path=/api/producer/**
+        - id: CONSUMER
+          uri: lb://CONSUMER
+          predicates:
+            - Path=/api/consumer/**
+        - id: ELASTICSEARCH
+          uri: lb://ELASTICSEARCH
+          predicates:
+            - Path=/api/elasticsearch/**

@@ -126,7 +126,7 @@ class MqLogServiceImpl : BaseServiceImpl<MqLog>(), MqLogService {
                 correlationId = correlationId,
                 operate = MqLogOperateEnum.CONFIRM.value,
                 result = MqLogResultEnum.FAIL.value,
-                reason = reason
+                resultInfo = reason
         )
         this.save(mqLog)
     }
@@ -137,7 +137,7 @@ class MqLogServiceImpl : BaseServiceImpl<MqLog>(), MqLogService {
                 message = message,
                 operate = MqLogOperateEnum.RETURNED_MESSAGE.value,
                 result = MqLogResultEnum.FAIL.value,
-                reason = reason
+                resultInfo = reason
         )
         this.save(mqLog)
     }
@@ -148,7 +148,7 @@ class MqLogServiceImpl : BaseServiceImpl<MqLog>(), MqLogService {
                 message = message,
                 operate = MqLogOperateEnum.PROCESS.value,
                 result = MqLogResultEnum.FAIL.value,
-                reason = reason
+                resultInfo = reason
         )
         this.save(mqLog)
     }
