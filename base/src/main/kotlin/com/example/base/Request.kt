@@ -123,11 +123,11 @@ class FilterRequest(
                     val direction = if (columnDirection[1] == "desc") Sort.Direction.DESC else Sort.Direction.ASC
                     orderList.add(Sort.Order.by(columnDirection[0].trim()).with(direction))
                 } else {
-                    orderList.add(Sort.Order.by(columnDirection[0].trim()).with(Sort.Direction.DESC))
+                    orderList.add(Sort.Order.by(columnDirection[0].trim()).with(Sort.Direction.ASC))
                 }
             }
         } ?: let {
-            orderList.add(Sort.Order.by("createTime").with(Sort.Direction.DESC))
+            orderList.add(Sort.Order.by("createTime").with(Sort.Direction.ASC))
         }
         return Sort.by(orderList)
     }

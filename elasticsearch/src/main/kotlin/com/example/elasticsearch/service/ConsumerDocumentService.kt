@@ -3,9 +3,6 @@ package com.example.elasticsearch.service
 import com.example.elasticsearch.document.ConsumerDocument
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.search.sort.FieldSortBuilder
-import org.elasticsearch.search.sort.SortBuilder
-import org.elasticsearch.search.sort.SortOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
@@ -49,8 +46,7 @@ data class ConsumerDocumentFilterRequest(
         return queryBuilder
     }
 
-    override fun sort(): SortBuilder<*> {
-        return FieldSortBuilder("consumer.createTime")
-                .order(SortOrder.DESC)
+    override fun getOrderFieldDirection(): String {
+        return "consumer.createTime desc"
     }
 }

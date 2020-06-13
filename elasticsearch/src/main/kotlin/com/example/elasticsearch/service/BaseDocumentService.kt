@@ -13,12 +13,13 @@ import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.rest.RestStatus
 import org.elasticsearch.search.builder.SearchSourceBuilder
+import org.elasticsearch.search.sort.FieldSortBuilder
 import org.elasticsearch.search.sort.SortBuilder
+import org.elasticsearch.search.sort.SortOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository
 import org.springframework.data.repository.NoRepositoryBean
 import java.util.*
-
 
 interface BaseDocumentService<T: BaseDocument> {
     fun getDocumentRepository(): BaseDocumentRepository<T>
@@ -33,9 +34,6 @@ interface BaseDocumentService<T: BaseDocument> {
 }
 
 abstract class BaseDocumentServiceImpl<T: BaseDocument> : BaseDocumentService<T> {
-
-    @Autowired
-    lateinit var client: RestHighLevelClient
 
     override fun getIndex(): String {
         TODO("Not yet implemented")
@@ -53,12 +51,17 @@ abstract class BaseDocumentServiceImpl<T: BaseDocument> : BaseDocumentService<T>
         return getDocumentRepository().findById(id).orElse(null)
     }
 
-    override fun page(request: DocumentFilterRequest) : SearchResponse {
+    @Autowired
+    lateinit var client: RestHighLevelClient
+
+    override fun page(filterRequest: DocumentFilterRequest) : SearchResponse {
         val sourceBuilder = SearchSourceBuilder()
-        sourceBuilder.from(request.pageIndex - 1)
-                .size(request.pageSize)
-                .sort(request.sort())
-                .query(request.queryBuilder())
+                .from(filterRequest.pageIndex - 1)
+                .size(filterRequest.pageSize)
+                .query(filterRequest.queryBuilder())
+        filterRequest.sorts().forEach { sortBuilder ->
+            sourceBuilder.sort(sortBuilder)
+        }
         val searchRequest = SearchRequest(getIndex()).source(sourceBuilder)
         return client.search(searchRequest, RequestOptions.DEFAULT)
     }
@@ -67,15 +70,15 @@ abstract class BaseDocumentServiceImpl<T: BaseDocument> : BaseDocumentService<T>
 @NoRepositoryBean
 interface BaseDocumentRepository<T: BaseDocument> : ElasticsearchRepository<T, String>
 
-fun <T: BaseDocument> documentPageResponse(request: DocumentFilterRequest, response: SearchResponse, clazz: Class<T>, key: String? = null, extraData: Map<String, *>? = null): Response {
-    if (response.status() == RestStatus.OK) {
-        val hits = response.hits
+fun <T: BaseDocument> documentPageResponse(filterRequest: DocumentFilterRequest, searchResponse: SearchResponse, clazz: Class<T>, key: String? = null, extraData: Map<String, *>? = null): Response {
+    if (searchResponse.status() == RestStatus.OK) {
+        val hits = searchResponse.hits
         val totalElements = hits.totalHits?.value ?: 0
-        var totalPages = totalElements / request.pageSize
-        if ((totalElements % request.pageSize) > 0) {
+        var totalPages = totalElements / filterRequest.pageSize
+        if ((totalElements % filterRequest.pageSize) > 0) {
             totalPages++
         }
-        val pagination = Pagination(pageIndex = request.pageIndex, pageSize = request.pageSize, totalElements = totalElements, totalPages = totalPages.toInt())
+        val pagination = Pagination(pageIndex = filterRequest.pageIndex, pageSize = filterRequest.pageSize, totalElements = totalElements, totalPages = totalPages.toInt())
         val list: MutableList<T> = mutableListOf()
         hits.forEach {
             list.add(JSON.parseObject(it.sourceAsString, clazz))
@@ -89,7 +92,7 @@ fun <T: BaseDocument> documentPageResponse(request: DocumentFilterRequest, respo
         }
         return okResponse(pageData)
     }
-    return errorResponse(response.toString())
+    return errorResponse(searchResponse.toString())
 }
 
 abstract class DocumentFilterRequest(
@@ -100,7 +103,31 @@ abstract class DocumentFilterRequest(
         var pageSize: Int = 15,
         var sorts: String? = null
 ) {
-    abstract fun queryBuilder() : BoolQueryBuilder
+    abstract fun queryBuilder(): BoolQueryBuilder
 
-    abstract fun sort(): SortBuilder<*>
+    open fun getOrderFieldDirection(): String? {
+        return null
+    }
+
+    fun sorts(): List<SortBuilder<*>> {
+        val orderList: MutableList<SortBuilder<*>> = ArrayList()
+        sorts?.let {
+            val orders = it.split(",")
+            for (order in orders) {
+                val fieldDirection = order.trim().split(" ")
+                if (fieldDirection.size == 2) {
+                    val direction = if (fieldDirection[1] == "desc") SortOrder.DESC else SortOrder.ASC
+                    orderList.add(FieldSortBuilder(fieldDirection[0]).order(direction))
+                } else {
+                    orderList.add(FieldSortBuilder(fieldDirection[0]).order(SortOrder.ASC))
+                }
+            }
+        }
+        getOrderFieldDirection()?.let {
+            val fieldDirection = it.trim().split(" ")
+            val direction = if (fieldDirection[1] == "desc") SortOrder.DESC else SortOrder.ASC
+            orderList.add(FieldSortBuilder(fieldDirection[0]).order(direction))
+        }
+        return orderList
+    }
 }
