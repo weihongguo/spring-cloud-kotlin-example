@@ -20,7 +20,7 @@ class PasswordController {
     @Autowired
     lateinit var userService: UserService
 
-    @PutMapping(value = ["password"])
+    @PutMapping("password")
     fun update(@RequestBody request: PasswordUpdateRequest): Response? {
         if (!request.check()) {
             throw RequestException()

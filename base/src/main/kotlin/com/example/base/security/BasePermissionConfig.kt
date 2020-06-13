@@ -55,9 +55,10 @@ data class PermissionAuthority(var permission: Permission? = null) : GrantedAuth
 
     @JsonIgnore
     override fun getAuthority(): String {
-        return permission?.let {
+        permission?.let {
             return it.name
-        } ?: "未知权限"
+        }
+        return "未知权限"
     }
 
     fun check(antPathMatcher: AntPathMatcher, path: String, method: String): Boolean {

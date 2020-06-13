@@ -6,7 +6,7 @@ import com.example.base.mq.EntityMessage
 import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
 import com.example.base.producer.Producer
 import com.example.elasticsearch.document.ConsumerDocument
-import com.example.elasticsearch.service.ConsumerDocumentRepository
+import com.example.elasticsearch.service.ConsumerDocumentService
 import com.example.elasticsearch.service.ConsumerRpcService
 import com.rabbitmq.client.Channel
 import org.slf4j.LoggerFactory
@@ -22,7 +22,7 @@ class ConsumerToElasticsearchReceiver {
     @Autowired
     lateinit var consumerRpcService: ConsumerRpcService
     @Autowired
-    lateinit var consumerDocumentRepository: ConsumerDocumentRepository
+    lateinit var consumerDocumentService: ConsumerDocumentService
 
     @RabbitListener(queues = [MQ_CONSUMER_TO_ELASTICSEARCH])
     fun process(channel: Channel, message: Message) {
@@ -39,7 +39,7 @@ class ConsumerToElasticsearchReceiver {
                 val producer = response.getData("producer", Producer::class.java)
                 if (consumer != null && producer != null) {
                     val consumerDocument = ConsumerDocument(consumer = consumer, producer = producer)
-                    // consumerDocumentRepository.save(consumerDocument)
+                    consumerDocumentService.save(consumerDocument)
                     log.info("save $consumerDocument")
                 }
             }
