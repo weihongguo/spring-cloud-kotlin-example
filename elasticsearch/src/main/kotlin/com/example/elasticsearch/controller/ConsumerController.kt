@@ -1,5 +1,6 @@
 package com.example.elasticsearch.controller
 
+import com.example.base.RequestException
 import com.example.base.Response
 import com.example.base.okResponse
 import com.example.elasticsearch.document.ConsumerDocument
@@ -27,9 +28,20 @@ class ConsumerController {
 
     @PostMapping("page")
     fun page(@RequestBody request: ConsumerDocumentFilterRequest): Response {
+        if (!request.check()) {
+            throw RequestException()
+        }
         val response = consumerDocumentService.page(request)
         return documentPageResponse(request, response, ConsumerDocument::class.java, "consumerDocuments", mapOf(
                 "test" to "test"
+        ))
+    }
+
+    @GetMapping("name_count_map")
+    fun nameCountMap(): Response {
+        val nameCountMap = consumerDocumentService.nameCountMap()
+        return okResponse(mapOf(
+                "nameCountMap" to nameCountMap
         ))
     }
 }

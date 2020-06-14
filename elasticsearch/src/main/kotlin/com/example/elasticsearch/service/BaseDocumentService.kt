@@ -103,9 +103,20 @@ abstract class DocumentFilterRequest(
         var pageSize: Int = 15,
         var sorts: String? = null
 ) {
+
+    fun check(): Boolean {
+        if (pageIndex <= 0) {
+            pageIndex = 1
+        }
+        if (pageSize <= 0) {
+            pageSize = 15
+        }
+        return true
+    }
+
     abstract fun queryBuilder(): BoolQueryBuilder
 
-    open fun getOrderFieldDirection(): String? {
+    open fun getDefaultFieldDirection(): String? {
         return null
     }
 
@@ -123,7 +134,7 @@ abstract class DocumentFilterRequest(
                 }
             }
         }
-        getOrderFieldDirection()?.let {
+        getDefaultFieldDirection()?.let {
             val fieldDirection = it.trim().split(" ")
             val direction = if (fieldDirection[1] == "desc") SortOrder.DESC else SortOrder.ASC
             orderList.add(FieldSortBuilder(fieldDirection[0]).order(direction))
