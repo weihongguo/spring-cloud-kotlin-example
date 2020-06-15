@@ -27,6 +27,17 @@ class ConsumerController {
         ))
     }
 
+    @PostMapping("list")
+    fun list(@RequestBody filterRequest: ConsumerDocumentFilterRequest): Response {
+        if (!filterRequest.check()) {
+            throw RequestException()
+        }
+        val list = consumerDocumentService.list(CONSUMER_INDEX_NAME, filterRequest, ConsumerDocument::class.java)
+        return okResponse(mapOf(
+                "consumerDocuments" to list
+        ))
+    }
+
     @PostMapping("page")
     fun page(@RequestBody filterRequest: ConsumerDocumentFilterRequest): Response {
         if (!filterRequest.check()) {

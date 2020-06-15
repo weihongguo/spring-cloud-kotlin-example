@@ -24,8 +24,10 @@ class LbsController {
 
     @PostMapping
     fun store(@RequestBody lbsDocument: LbsDocument): Response {
-        documentService.save(lbsDocument)
-        return okResponse()
+        val savedLbsDocument = documentService.save(lbsDocument)
+        return okResponse(mapOf(
+                "lbsDocument" to savedLbsDocument
+        ))
     }
 
     @GetMapping("{id}")
@@ -43,7 +45,7 @@ class LbsController {
             throw RequestException()
         }
         val page = documentService.page(LBS_INDEX_NAME, filterRequest, LbsDocument::class.java)
-        return pageResponse(page, "consumerDocuments", mapOf(
+        return pageResponse(page, "lbsDocuments", mapOf(
             "test" to "test"
         ))
     }

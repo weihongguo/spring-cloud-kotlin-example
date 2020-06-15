@@ -18,35 +18,36 @@ import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.search.sort.FieldSortBuilder
 import org.elasticsearch.search.sort.SortBuilder
 import org.elasticsearch.search.sort.SortOrder
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 open class DocumentService {
+    private val log = LoggerFactory.getLogger(javaClass)
 
     @Autowired
     lateinit var client: RestHighLevelClient
 
     fun <T: BaseDocument> save(document: T): T? {
-        // return getDocumentRepository().save(document)
         val indexRequest = IndexRequest(document.index())
             .id(document.id)
-            .source(JSON.toJSON(document), XContentType.JSON)
+            .source(JSON.toJSONString(document), XContentType.JSON)
         val indexResponse = client.index(indexRequest, RequestOptions.DEFAULT)
         if (indexResponse.status() == RestStatus.OK) {
             return document
         }
+        log.error(indexResponse.status().toString())
         return null
     }
 
     fun <T: BaseDocument> saveAll(documents: Iterable<T>): Iterable<T>? {
-        // return getDocumentRepository().saveAll(documents)
         val bulkRequest = BulkRequest()
         documents.forEach{
             val indexRequest = IndexRequest(it.index())
                 .id(it.id)
-                .source(JSON.toJSON(it), XContentType.JSON)
+                .source(JSON.toJSONString(it), XContentType.JSON)
             bulkRequest.add(indexRequest)
         }
         val bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT)
@@ -57,7 +58,6 @@ open class DocumentService {
     }
 
     fun <T: BaseDocument> getById(index: String, id: String, clazz: Class<T>): T? {
-        // return getDocumentRepository().findById(id).orElse(null)
         val getRequest = GetRequest(index, id)
         val getResponse = client.get(getRequest, RequestOptions.DEFAULT)
         if (getResponse.isExists) {

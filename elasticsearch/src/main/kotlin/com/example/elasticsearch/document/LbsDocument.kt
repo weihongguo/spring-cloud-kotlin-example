@@ -34,14 +34,6 @@ data class LbsDocumentFilterRequest(
 
     override fun queryBuilder(): BoolQueryBuilder {
         val boolQueryBuilder = QueryBuilders.boolQuery()
-        createTimeStart?.let {
-            val subQueryBuilder = QueryBuilders.rangeQuery("createTime").gt(it.time)
-            boolQueryBuilder.must(subQueryBuilder)
-        }
-        createTimeEnd?.let {
-            val subQueryBuilder = QueryBuilders.rangeQuery("createTime").lt(it.time)
-            boolQueryBuilder.must(subQueryBuilder)
-        }
         if (name.isNotBlank()) {
             val subQueryBuilder = QueryBuilders.termQuery("name.keyword", name)
             boolQueryBuilder.must(subQueryBuilder)
@@ -54,6 +46,6 @@ data class LbsDocumentFilterRequest(
     }
 
     override fun getDefaultFieldDirection(): String {
-        return "consumer.createTime desc"
+        return "id desc"
     }
 }
