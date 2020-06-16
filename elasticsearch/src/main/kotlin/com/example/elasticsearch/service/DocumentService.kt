@@ -35,10 +35,9 @@ open class DocumentService {
             .id(document.id)
             .source(JSON.toJSONString(document), XContentType.JSON)
         val indexResponse = client.index(indexRequest, RequestOptions.DEFAULT)
-        if (indexResponse.status() == RestStatus.OK) {
+        if (indexResponse.status() == RestStatus.CREATED || indexResponse.status() == RestStatus.OK) {
             return document
         }
-        log.error(indexResponse.status().toString())
         return null
     }
 

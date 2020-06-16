@@ -9,6 +9,11 @@ import org.elasticsearch.index.query.QueryBuilders
  * @Date 2020/6/15 17:25
  **/
 
+data class GeoPoint (
+        var lat: Double,
+        var lon: Double
+)
+
 data class LbsDocument(
     var name: String,
     var digest: String,
