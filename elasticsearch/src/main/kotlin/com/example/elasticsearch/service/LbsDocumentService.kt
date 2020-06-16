@@ -48,8 +48,6 @@ class LbsDocumentService : DocumentService() {
             val hits = searchResponse.hits
             val list: MutableList<LbsDocument> = mutableListOf()
             hits.forEach {
-                log.info(it.toString())
-                log.info(it.sourceAsString)
                 list.add(JSON.parseObject(it.sourceAsString, LbsDocument::class.java))
             }
             return list
@@ -76,8 +74,6 @@ class LbsDocumentService : DocumentService() {
             val hits = searchResponse.hits
             val list: MutableList<LbsDocument> = mutableListOf()
             hits.forEach {
-                log.info(it.toString())
-                log.info(it.sourceAsString)
                 list.add(JSON.parseObject(it.sourceAsString, LbsDocument::class.java))
             }
             return list
