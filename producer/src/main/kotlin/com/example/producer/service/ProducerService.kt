@@ -1,9 +1,9 @@
 package com.example.producer.service
 
-import com.example.base.producer.Producer
 import com.example.base.BaseRepository
 import com.example.base.BaseService
 import com.example.base.BaseServiceImpl
+import com.example.base.producer.Producer
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheEvict
@@ -30,6 +30,7 @@ class ProducerServiceImpl : BaseServiceImpl<Producer>(), ProducerService {
 
     @Cacheable(cacheNames = ["producer::id"], key = "#id", unless="#result == null")
     override fun getById(id: Long): Producer? {
+        log.info("##### producer from db #####")
         return super.getById(id)
     }
 

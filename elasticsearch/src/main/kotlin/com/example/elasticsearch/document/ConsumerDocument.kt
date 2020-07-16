@@ -7,15 +7,15 @@ import org.elasticsearch.index.query.BoolQueryBuilder
 import org.elasticsearch.index.query.QueryBuilders
 
 data class ConsumerDocument (
-    var consumer: Consumer,
-    var producer: Producer
+    var consumer: Consumer? = null,
+    var producer: Producer? = null
 ) : BaseDocument() {
     companion object {
         const val CONSUMER_INDEX_NAME = "consumer"
     }
 
     init {
-        this.id = consumer.id.toString()
+        this.id = consumer?.id.toString()
     }
 
     override fun index(): String {

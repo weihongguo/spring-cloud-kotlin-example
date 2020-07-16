@@ -1,9 +1,9 @@
 package com.example.elasticsearch.service
 
-import com.alibaba.fastjson.JSON
 import com.example.elasticsearch.document.GeoPoint
 import com.example.elasticsearch.document.LbsDocument
 import com.example.elasticsearch.document.LbsDocument.Companion.LBS_INDEX_NAME
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.client.RequestOptions
 import org.elasticsearch.common.unit.DistanceUnit
@@ -34,11 +34,11 @@ class LbsDocumentService : DocumentService() {
         val sourceBuilder = SearchSourceBuilder()
                 .query(
                         QueryBuilders.geoDistanceQuery("location")
-                            .point(distanceRequest.point.lat, distanceRequest.point.lon)
+                            .point(distanceRequest.point.lat!!, distanceRequest.point.lon!!)
                             .distance(distanceRequest.distance)
                 )
                 .sort(
-                        SortBuilders.geoDistanceSort("location", distanceRequest.point.lat, distanceRequest.point.lon)
+                        SortBuilders.geoDistanceSort("location", distanceRequest.point.lat!!, distanceRequest.point.lon!!)
                                 .order(SortOrder.ASC)
                                 .unit(DistanceUnit.KILOMETERS)
                 )
@@ -48,7 +48,7 @@ class LbsDocumentService : DocumentService() {
             val hits = searchResponse.hits
             val list: MutableList<LbsDocument> = mutableListOf()
             hits.forEach {
-                list.add(JSON.parseObject(it.sourceAsString, LbsDocument::class.java))
+                list.add(ObjectMapper().readValue(it.sourceAsString, LbsDocument::class.java))
             }
             return list
         }
@@ -59,7 +59,7 @@ class LbsDocumentService : DocumentService() {
         val sourceBuilder = SearchSourceBuilder()
                 .query(
                         QueryBuilders.geoDistanceQuery("location")
-                                .point(distanceRequest.point.lat, distanceRequest.point.lon)
+                                .point(distanceRequest.point.lat!!, distanceRequest.point.lon!!)
                                 .distance(distanceRequest.distance)
                 )
                 .sort(
@@ -74,7 +74,7 @@ class LbsDocumentService : DocumentService() {
             val hits = searchResponse.hits
             val list: MutableList<LbsDocument> = mutableListOf()
             hits.forEach {
-                list.add(JSON.parseObject(it.sourceAsString, LbsDocument::class.java))
+                list.add(ObjectMapper().readValue(it.sourceAsString, LbsDocument::class.java))
             }
             return list
         }

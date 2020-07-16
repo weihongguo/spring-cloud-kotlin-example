@@ -1,10 +1,10 @@
 package com.example.elasticsearch.service
 
-import com.alibaba.fastjson.JSON
 import com.example.base.Pagination
 import com.example.base.Response
 import com.example.base.okResponse
 import com.example.elasticsearch.document.BaseDocument
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.elasticsearch.action.bulk.BulkRequest
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.IndexRequest
@@ -33,7 +33,7 @@ open class DocumentService {
     fun <T: BaseDocument> save(document: T): T? {
         val indexRequest = IndexRequest(document.index())
             .id(document.id)
-            .source(JSON.toJSONString(document), XContentType.JSON)
+            .source(ObjectMapper().writeValueAsString(document), XContentType.JSON)
         val indexResponse = client.index(indexRequest, RequestOptions.DEFAULT)
         if (indexResponse.status() == RestStatus.CREATED || indexResponse.status() == RestStatus.OK) {
             return document
@@ -46,7 +46,7 @@ open class DocumentService {
         documents.forEach{
             val indexRequest = IndexRequest(it.index())
                 .id(it.id)
-                .source(JSON.toJSONString(it), XContentType.JSON)
+                .source(ObjectMapper().writeValueAsString(it), XContentType.JSON)
             bulkRequest.add(indexRequest)
         }
         val bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT)
@@ -60,7 +60,7 @@ open class DocumentService {
         val getRequest = GetRequest(index, id)
         val getResponse = client.get(getRequest, RequestOptions.DEFAULT)
         if (getResponse.isExists) {
-            return JSON.parseObject(getResponse.sourceAsString, clazz)
+            return ObjectMapper().readValue(getResponse.sourceAsString, clazz)
         }
         return null
     }
@@ -77,7 +77,7 @@ open class DocumentService {
             val hits = searchResponse.hits
             val list: MutableList<T> = mutableListOf()
             hits.forEach {
-                list.add(JSON.parseObject(it.sourceAsString, clazz))
+                list.add(ObjectMapper().readValue(it.sourceAsString, clazz))
             }
             return list
         }
@@ -98,7 +98,7 @@ open class DocumentService {
             val hits = searchResponse.hits
             val list: MutableList<T> = mutableListOf()
             hits.forEach {
-                list.add(JSON.parseObject(it.sourceAsString, clazz))
+                list.add(ObjectMapper().readValue(it.sourceAsString, clazz))
             }
             return Page<T>(
                 pageIndex = filterRequest.pageIndex,

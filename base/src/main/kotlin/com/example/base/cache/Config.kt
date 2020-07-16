@@ -1,6 +1,10 @@
 package com.example.base.cache
 
-import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.annotation.PropertyAccessor
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CachingConfigurerSupport
 import org.springframework.context.annotation.Bean
@@ -9,7 +13,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.cache.RedisCacheWriter
 import org.springframework.data.redis.connection.RedisConnectionFactory
-import org.springframework.data.redis.serializer.RedisSerializationContext
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializer
 import java.time.Duration
 
@@ -18,12 +22,12 @@ class CacheConfig() : CachingConfigurerSupport() {
 
     @Bean
     fun redisCacheManager(connectionFactory: RedisConnectionFactory): CacheManager {
-        val serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(getRedisSerializer())
+        // val serializationPair = RedisSerializationContext.SerializationPair.fromSerializer(getRedisSerializer())
         val redisCacheConfig = RedisCacheConfiguration
                 .defaultCacheConfig()
                 .disableCachingNullValues()
                 .entryTtl(Duration.ofSeconds(60 * 60))
-                .serializeValuesWith(serializationPair)
+                //.serializeValuesWith(serializationPair)
         return RedisCacheManager
                 .builder(RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory))
                 .cacheDefaults(redisCacheConfig)
@@ -31,6 +35,9 @@ class CacheConfig() : CachingConfigurerSupport() {
     }
 
     private fun getRedisSerializer(): RedisSerializer<Any> {
-        return GenericFastJsonRedisSerializer()
+        val objectMapper = ObjectMapper()
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
+        objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY)
+        return GenericJackson2JsonRedisSerializer(objectMapper)
     }
 }

@@ -5,7 +5,8 @@ import com.example.base.mq.CustomMessage
 import com.example.base.mq.EntityMessage
 import com.example.base.mq.EntityMessageOperateEnum
 import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
-import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER
+import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER_CUSTOM
+import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_PRODUCER_ENTITY
 import com.example.base.mq.MqService
 import com.example.base.okResponse
 import com.example.base.security.getSecurityAuthorization
@@ -28,18 +29,20 @@ class MqController {
 
     @GetMapping("consumer_to_producer")
     fun consumerToProducer(): Response {
-        val customMessage = CustomMessage(
-            queue = MQ_CONSUMER_TO_PRODUCER,
-            content = "hello, world!"
-        )
-        mqService.send(customMessage)
         val entityMessage = EntityMessage(
-            queue = MQ_CONSUMER_TO_PRODUCER,
+            queue = MQ_CONSUMER_TO_PRODUCER_ENTITY,
             entityType = "consumer",
             entityId = 1,
             operate = EntityMessageOperateEnum.CREATE.value
         )
         mqService.send(entityMessage)
+
+        val customMessage = CustomMessage(
+            queue = MQ_CONSUMER_TO_PRODUCER_CUSTOM,
+            content = "hello, world!"
+        )
+        mqService.send(customMessage)
+
         return okResponse()
     }
 

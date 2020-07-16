@@ -1,6 +1,5 @@
 package com.example.elasticsearch.mq
 
-import com.alibaba.fastjson.JSON
 import com.example.base.consumer.Consumer
 import com.example.base.mq.EntityMessage
 import com.example.base.mq.MqConfig.Companion.MQ_CONSUMER_TO_ELASTICSEARCH
@@ -8,6 +7,7 @@ import com.example.base.producer.Producer
 import com.example.elasticsearch.document.ConsumerDocument
 import com.example.elasticsearch.service.ConsumerDocumentService
 import com.example.elasticsearch.service.ConsumerRpcService
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.Channel
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
@@ -28,7 +28,7 @@ class ConsumerToElasticsearchReceiver {
     fun process(channel: Channel, message: Message) {
         channel.basicAck(message.messageProperties.deliveryTag, false);
 
-        val entityMessage = JSON.parseObject<EntityMessage>(message.body, EntityMessage::class.java)
+        val entityMessage = ObjectMapper().readValue(message.body, EntityMessage::class.java)
         log.info("receive $entityMessage")
 
         entityMessage.authorization?.let {

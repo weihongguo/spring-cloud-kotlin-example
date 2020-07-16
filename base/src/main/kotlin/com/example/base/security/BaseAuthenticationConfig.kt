@@ -1,7 +1,7 @@
 package com.example.base.security
 
-import com.alibaba.fastjson.JSON
 import com.example.base.unauthorizedResponse
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -58,9 +58,11 @@ class BaseAuthenticationEntryPoint : AuthenticationEntryPoint {
             "exception" to e.toString(),
             "url" to servletRequest.requestURI.toString()
         ))
+        val objectMapper = ObjectMapper()
+        val json = objectMapper.writeValueAsString(response);
         servletResponse.setHeader("Content-Type", "application/json;charset=utf-8")
         servletResponse.status = HttpServletResponse.SC_UNAUTHORIZED
-        servletResponse.writer.write(JSON.toJSONString(response))
+        servletResponse.writer.write(json)
         servletResponse.writer.flush()
     }
 }

@@ -10,14 +10,14 @@ import org.elasticsearch.index.query.QueryBuilders
  **/
 
 data class GeoPoint (
-        var lat: Double,
-        var lon: Double
+        var lat: Double? = null,
+        var lon: Double? = null
 )
 
 data class LbsDocument(
-    var name: String,
-    var digest: String,
-    var location: GeoPoint
+    var name: String = "",
+    var digest: String = "",
+    var location: GeoPoint? = null
 ) : BaseDocument() {
     companion object {
         const val LBS_INDEX_NAME = "lbs"

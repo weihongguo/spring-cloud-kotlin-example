@@ -1,5 +1,6 @@
 package com.example.base
 
+import java.io.Serializable
 import java.util.*
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -25,4 +26,4 @@ abstract class BaseModel(
     var createTime: Date? = null,
     var updateTime: Date? = null,
     var deleteTime: Date? = null
-)
+) : Serializable

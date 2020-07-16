@@ -1,9 +1,9 @@
 package com.example.base.mq
 
-import com.alibaba.fastjson.JSON
 import com.example.base.BaseRepository
 import com.example.base.BaseService
 import com.example.base.BaseServiceImpl
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.core.MessageBuilder
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 
 data class CustomMessage (
-        var queue: String,
-        var content: String,
+        var queue: String = "",
+        var content: String = "",
         var authorization: String? = null
 ) {
     fun uuid(): String = "${queue}?content=$content&time=${System.currentTimeMillis()}"
@@ -27,7 +27,7 @@ data class CustomMessage (
 }
 
 data class EntityMessage (
-        var queue: String,
+        var queue: String = "",
         var entityType: String = "",
         var entityId: Long = 0,
         var operate: String = "",
@@ -69,7 +69,7 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
     }
 
     fun send(customMessage: CustomMessage) {
-        val json = JSON.toJSONString(customMessage)
+        val json = ObjectMapper().writeValueAsString(customMessage);
         val uuid = customMessage.uuid()
         val message = MessageBuilder.withBody(json.toByteArray())
                 .setContentType(MessageProperties.CONTENT_TYPE_JSON)
@@ -80,7 +80,7 @@ final class MqService(private var rabbitTemplate: RabbitTemplate): RabbitTemplat
     }
 
     fun send(entityMessage: EntityMessage) {
-        val json = JSON.toJSONString(entityMessage)
+        val json = ObjectMapper().writeValueAsString(entityMessage);
         val uuid = entityMessage.uuid()
         val message = MessageBuilder.withBody(json.toByteArray())
                 .setContentType(MessageProperties.CONTENT_TYPE_JSON)
