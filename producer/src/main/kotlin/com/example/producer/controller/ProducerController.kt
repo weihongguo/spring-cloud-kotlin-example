@@ -7,6 +7,7 @@ import com.example.base.pageResponse
 import com.example.base.producer.Producer
 import com.example.producer.service.ProducerService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
@@ -16,6 +17,9 @@ class ProducerController {
 
     @Autowired
     lateinit var producerService: ProducerService
+
+    @Autowired
+    lateinit var producerRedisTemplate: RedisTemplate<String, Producer>
 
     @PostMapping
     @PreAuthorize("hasPermission('/producer/producer', 'WRITE')")
@@ -39,8 +43,10 @@ class ProducerController {
     @GetMapping("{id}")
     @PreAuthorize("hasPermission('/producer/producer/{id}', 'READ')")
     fun show(@PathVariable id: Long): Response {
+        val cache = producerRedisTemplate.opsForValue().get("producer::id::1")
         val producer = producerService.getById(id)
         return okResponse(mapOf(
+            "cache" to cache,
             "producer" to producer
         ))
     }
